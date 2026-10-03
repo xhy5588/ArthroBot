@@ -1,0 +1,186 @@
+{
+  "task": "balance",
+  "free_base": true,
+  "bodies": 21,
+  "motor_action_order": [
+    "left_arm_1",
+    "left_arm_2",
+    "left_arm_3",
+    "left_arm_4",
+    "left_arm_5",
+    "left_arm_6",
+    "right_arm_1",
+    "right_arm_2",
+    "right_arm_3",
+    "right_arm_4",
+    "right_arm_5",
+    "right_arm_6",
+    "left_hip_1",
+    "left_hip_2",
+    "left_knee",
+    "right_hip_1",
+    "right_hip_2",
+    "right_knee",
+    "left_wheel",
+    "right_wheel"
+  ],
+  "actions": 20,
+  "observations": 96,
+  "balance_version": "v2",
+  "action_rate_weight": 0.1,
+  "all_stiffness_damping_zero": false,
+  "implicit_drives_disabled": true,
+  "control_mode": "hybrid",
+  "nominal_pose": {
+    "joint_positions": {
+      "left_arm_1": -0.25,
+      "right_arm_1": 0.2,
+      "left_hip_1": -0.17922062603121616,
+      "left_hip_2": 0.014074352711117363,
+      "left_knee": -0.12980201323889617,
+      "right_hip_1": 0.18893998901786552,
+      "right_hip_2": -0.001308778497712519,
+      "right_knee": 0.0912243042362087
+    },
+    "initial_height_m": 0.5164580575053023,
+    "initial_rpy": [
+      0.0,
+      0.0,
+      0.0
+    ],
+    "initial_quaternion_wxyz": [
+      1.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "center_of_mass_local_m": [
+      0.1123757209915529,
+      0.005979063066390221,
+      -0.11465246083544131
+    ],
+    "torso_upright": true,
+    "com_forward_offset_from_axle_m": 4.695192563908268e-08,
+    "wheel_center_height_difference_m": 5.217643506139069e-08,
+    "arm_clearance_m": 0.15664654474212586,
+    "support_force_n": [
+      66.93296380007205,
+      63.28770157046513
+    ],
+    "static_joint_torque_nm": {
+      "left_arm_1": -5.682219575643942,
+      "left_arm_2": 5.484434737173314,
+      "left_arm_3": 1.8056446807706872,
+      "left_arm_4": -0.03411256396677653,
+      "left_arm_5": 0.4969943316235451,
+      "left_arm_6": 0.004956810493328925,
+      "right_arm_1": 6.330665981348746,
+      "right_arm_2": -4.81043193073923,
+      "right_arm_3": -3.1855559853889814,
+      "right_arm_4": -1.172814838556759,
+      "right_arm_5": 0.43747370108168765,
+      "right_arm_6": 0.005802110095966581,
+      "left_hip_1": 6.4127092207533245,
+      "left_hip_2": 3.5910579775915425,
+      "left_knee": 2.8862438011467373,
+      "left_wheel": 8.191216860378692e-07,
+      "right_hip_1": -5.997128471229085,
+      "right_hip_2": 3.3660061656614575,
+      "right_knee": -2.7412506312096694,
+      "right_wheel": -8.456988396085254e-07
+    },
+    "maximum_static_torque_nm": 6.4127092207533245,
+    "note": "Static estimate with vertical wheel reactions, exact URDF COMs and no self-contact forces. Dynamic simulation must validate the pose."
+  },
+  "position_scale_rad": 0.25,
+  "position_kp": 80.0,
+  "position_kd": 4.0,
+  "render_every": 5,
+  "grippers": "parked open",
+  "motor_torque_limit_nm": 13.0,
+  "motor_speed_limit_rpm": 74.0,
+  "mass_kg": 13.274276733398438,
+  "learning": "PPO, 18 position offsets with explicit torque-limited PD and 2 wheel torques; no root support or balance controller",
+  "reward": "standing height, upright torso, stationary COM, arm clearance, soft posture preference, control costs; v2 dense Huber errors, XY drift, stronger action-change cost",
+  "fall_tilt_deg": 30.0,
+  "episode_seconds": 15.0,
+  "seed": 42,
+  "source_sha256": {
+    "whole_body.py": "001e9a0da471f1f58d7fa11d7ba45acd133c9c4429e90f19f4c10c4486e2a2b4",
+    "whole_body_env.py": "786ce2115175d7814ffea5d92a81c178391b25eb4047b52b3012ed02d28bc77e",
+    "whole_body_rewards.py": "793aa4eca3cd56dbeae9bee200a31b8bcf71d506062bf4abc2477a623dff3cbe",
+    "standing_monitor.py": "df2444c5c99c5dedaba7e4c2c11cda56eea09ce03da094a5ef103f38fb061eb2",
+    "ppo.py": "cfada83481a6cecea29ca3458bc21ef1ff8322bce42d23232e260507b26ddbfe",
+    "hybrid_control.py": "8f817c79e4ff43c187e4bdcf946aa24c538c05c829fd7170c4c1e2604f50ff30",
+    "nominal_pose.py": "b0a686bb120a2df06157c3338be90ce2cd8c1e04f539f04e18bc18617e85a5ae",
+    "ppo_diagnostics.py": "d1c1643017ce322abf34325c41967048aa919bfc279765fda4e51a04824079c8"
+  },
+  "runner": {
+    "seed": 42,
+    "device": "cuda:0",
+    "num_steps_per_env": 48,
+    "max_iterations": 1000,
+    "empirical_normalization": null,
+    "obs_groups": {
+      "policy": [
+        "policy"
+      ],
+      "critic": [
+        "policy"
+      ]
+    },
+    "clip_actions": 1.0,
+    "save_interval": 25,
+    "experiment_name": "modular_humanoid_balance",
+    "run_name": "",
+    "logger": "tensorboard",
+    "neptune_project": "isaaclab",
+    "wandb_project": "isaaclab",
+    "resume": false,
+    "load_run": ".*",
+    "load_checkpoint": "model_.*.pt",
+    "class_name": "OnPolicyRunner",
+    "policy": {
+      "class_name": "ActorCritic",
+      "init_noise_std": 0.25,
+      "noise_std_type": "log",
+      "actor_obs_normalization": false,
+      "critic_obs_normalization": false,
+      "actor_hidden_dims": [
+        256,
+        256,
+        128
+      ],
+      "critic_hidden_dims": [
+        256,
+        256,
+        128
+      ],
+      "activation": "elu"
+    },
+    "algorithm": {
+      "class_name": "PPO",
+      "num_learning_epochs": 5,
+      "num_mini_batches": 4,
+      "learning_rate": 0.0003,
+      "schedule": "adaptive",
+      "gamma": 0.995,
+      "lam": 0.95,
+      "entropy_coef": 0.002,
+      "desired_kl": 0.01,
+      "max_grad_norm": 1.0,
+      "value_loss_coef": 1.0,
+      "use_clipped_value_loss": true,
+      "clip_param": 0.2,
+      "normalize_advantage_per_mini_batch": false,
+      "rnd_cfg": null,
+      "symmetry_cfg": null
+    }
+  },
+  "num_envs": 12,
+  "checkpoint": "None",
+  "initialize_from": "None",
+  "iterations_requested": 5000,
+  "eval_interval": 250,
+  "total_training_transitions": 2880000
+}
