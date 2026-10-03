@@ -1,0 +1,1388 @@
+<?xml version="1.0" ?>
+<!-- Generated using onshape-to-robot -->
+<robot name="single_module_test">
+  <!-- Link 90deg_holder -->
+  <link name="90deg_holder">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part 90deg_holder -->
+    <visual>
+      <origin xyz="0.0107892 0.0291701 0.032171" rpy="-0.0376756 0 -0"/>
+      <geometry>
+        <mesh filename="package://meshes/90deg_holder.stl"/>
+      </geometry>
+      <material name="90deg_holder_material">
+        <color rgba="0.231373 0.380392 0.705882 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0107892 0.0291701 0.032171" rpy="-0.0376756 0 -0"/>
+      <geometry>
+        <mesh filename="package://meshes/90deg_holder.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x4 -->
+    <visual>
+      <origin xyz="0.0288732 0.0492763 0.0195297" rpy="-0.171399 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x4_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0288732 0.0492763 0.0195297" rpy="-0.171399 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg8016_dmg__双磁铁 -->
+    <visual>
+      <origin xyz="0.0627732 0.0285373 0.0153829" rpy="-1.5708 -1.53312 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg8016_dmg__双磁铁.stl"/>
+      </geometry>
+      <material name="mg8016_dmg__双磁铁_material">
+        <color rgba="0.752941 0.752941 0.752941 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0627732 0.0285373 0.0153829" rpy="-1.5708 -1.53312 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg8016_dmg__双磁铁.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x4_2 -->
+    <visual>
+      <origin xyz="0.0358732 0.0281697 0.00563133" rpy="2.4149 -1.53312 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x4_2_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0358732 0.0281697 0.00563133" rpy="2.4149 -1.53312 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x4_3 -->
+    <visual>
+      <origin xyz="0.0358732 0.00668627 0.0463072" rpy="2.4149 0.561274 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x4_3_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0358732 0.00668627 0.0463072" rpy="2.4149 0.561274 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part m2x5_n -->
+    <visual>
+      <origin xyz="0.0687732 0.0471345 0.0488303" rpy="1.33367 0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/m2x5_n.stl"/>
+      </geometry>
+      <material name="m2x5_n_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0687732 0.0471345 0.0488303" rpy="1.33367 0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/m2x5_n.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x4_4 -->
+    <visual>
+      <origin xyz="0.0288732 0.0300647 0.0559041" rpy="1.923 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x4_4_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0288732 0.0300647 0.0559041" rpy="1.923 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮40_0_4 -->
+    <visual>
+      <origin xyz="0.0624732 0.0285373 0.0153829" rpy="-1.5708 -1.48082 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮40_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮40_0_4_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0624732 0.0285373 0.0153829" rpy="-1.5708 -1.48082 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮40_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_nut -->
+    <visual>
+      <origin xyz="0.0562732 0.0291701 0.032171" rpy="-0.0376756 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_nut.stl"/>
+      </geometry>
+      <material name="mg4010_nut_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0562732 0.0291701 0.032171" rpy="-0.0376756 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_nut.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part c_e688zz -->
+    <visual>
+      <origin xyz="0.0444732 0.0291701 0.032171" rpy="-0.0376756 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e688zz.stl"/>
+      </geometry>
+      <material name="c_e688zz_material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0444732 0.0291701 0.032171" rpy="-0.0376756 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e688zz.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part c_e688zz_2 -->
+    <visual>
+      <origin xyz="0.0509732 0.0291701 0.032171" rpy="-0.0376756 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e688zz.stl"/>
+      </geometry>
+      <material name="c_e688zz_2_material">
+        <color rgba="1 0 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0509732 0.0291701 0.032171" rpy="-0.0376756 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e688zz.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg8016_fmb_从隔磁圈 -->
+    <visual>
+      <origin xyz="0.0607732 0.0285373 0.0153829" rpy="-0.0376756 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg8016_fmb_从隔磁圈.stl"/>
+      </geometry>
+      <material name="mg8016_fmb_从隔磁圈_material">
+        <color rgba="0.270588 0.615686 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0607732 0.0285373 0.0153829" rpy="-0.0376756 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg8016_fmb_从隔磁圈.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mc -->
+    <visual>
+      <origin xyz="0.0585732 0.0291701 0.032171" rpy="-1.53312 0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mc.stl"/>
+      </geometry>
+      <material name="mg4010_mc_material">
+        <color rgba="0.988235 0.737255 0.517647 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0585732 0.0291701 0.032171" rpy="-1.53312 0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mc.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part pcb_allcatpart -->
+    <visual>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart.stl"/>
+      </geometry>
+      <material name="pcb_allcatpart_material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x4_5 -->
+    <visual>
+      <origin xyz="0.0358732 0.0526543 0.0445745" rpy="-0.726697 0.485923 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x4_5_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0358732 0.0526543 0.0445745" rpy="-0.726697 0.485923 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮44_0_4 -->
+    <visual>
+      <origin xyz="0.0624732 0.0291701 0.032171" rpy="-1.5708 -1.51256 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮44_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮44_0_4_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0624732 0.0291701 0.032171" rpy="-1.5708 -1.51256 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮44_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_fc -->
+    <visual>
+      <origin xyz="0.0688732 0.0291701 0.032171" rpy="0.0376756 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_fc.stl"/>
+      </geometry>
+      <material name="mg4010_fc_material">
+        <color rgba="0.752941 0.752941 0.752941 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0688732 0.0291701 0.032171" rpy="0.0376756 -0 3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_fc.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part pcb_allcatpart_2 -->
+    <visual>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart__2.stl"/>
+      </geometry>
+      <material name="pcb_allcatpart_2_material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart__2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part pcb_allcatpart_3 -->
+    <visual>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart__3.stl"/>
+      </geometry>
+      <material name="pcb_allcatpart_3_material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart__3.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 轴承_c_efl675zz -->
+    <visual>
+      <origin xyz="0.0580732 0.0285373 0.0153829" rpy="3.01312 -0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/轴承_c_efl675zz.stl"/>
+      </geometry>
+      <material name="轴承_c_efl675zz_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0580732 0.0285373 0.0153829" rpy="3.01312 -0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/轴承_c_efl675zz.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg8016_mag__磁环 -->
+    <visual>
+      <origin xyz="0.0625732 0.0291701 0.032171" rpy="-1.5708 -1.15163 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg8016_mag__磁环.stl"/>
+      </geometry>
+      <material name="mg8016_mag__磁环_material">
+        <color rgba="0.752941 0.752941 0.752941 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0625732 0.0291701 0.032171" rpy="-1.5708 -1.15163 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg8016_mag__磁环.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part pcb_allcatpart_4 -->
+    <visual>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart__4.stl"/>
+      </geometry>
+      <material name="pcb_allcatpart_4_material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart__4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part pcb_allcatpart_5 -->
+    <visual>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart__5.stl"/>
+      </geometry>
+      <material name="pcb_allcatpart_5_material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0652732 0.0291701 0.032171" rpy="-1.5708 -0.0376756 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/pcb_allcatpart__5.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x4_6 -->
+    <visual>
+      <origin xyz="0.0288732 0.0081693 0.0210791" rpy="-2.26579 0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x4_6_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0288732 0.0081693 0.0210791" rpy="-2.26579 0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -0.650933 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -0.650933 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_2 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 1.14426 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_2_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 1.14426 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_3 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -1.54853 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_3_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -1.54853 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_4 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 0.875332 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_4_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 0.875332 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_5 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -0.875332 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_5_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -0.875332 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_6 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.0222655 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_6_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.0222655 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_7 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -0.202134 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_7_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -0.202134 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_8 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 1.54853 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_8_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 1.54853 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_9 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.695464 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_9_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.695464 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_10 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 1.32413 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_10_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 1.32413 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_11 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 0.426533 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_11_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 0.426533 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_12 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.695464 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_12_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.695464 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_13 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 1.09973 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_13_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 1.09973 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_14 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.919863 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_14_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.919863 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_15 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -1.09973 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_15_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -1.09973 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_16 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 0.650933 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_16_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 0.650933 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_17 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.246665 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_17_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.246665 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_ca -->
+    <visual>
+      <origin xyz="0.0423732 0.0291701 0.032171" rpy="1.55371 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_ca.stl"/>
+      </geometry>
+      <material name="mg4010_ca_material">
+        <color rgba="0.501961 0.501961 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0423732 0.0291701 0.032171" rpy="1.55371 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_ca.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_18 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.0222655 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_18_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.0222655 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_19 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -0.426533 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_19_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -0.426533 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_20 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.919863 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_20_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.919863 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part lm43n24a_j210c_1 -->
+    <visual>
+      <origin xyz="0.0543732 -0.771782 0.747793" rpy="-1.5708 0.153117 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/lm43n24a_j210c_1.stl"/>
+      </geometry>
+      <material name="lm43n24a_j210c_1_material">
+        <color rgba="0 1 0 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 -0.771782 0.747793" rpy="-1.5708 0.153117 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/lm43n24a_j210c_1.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_21 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 0.202134 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_21_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 0.202134 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_22 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -1.32413 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_22_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 -1.32413 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_23 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -1.14426 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_23_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -1.14426 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_24 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.246665 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_24_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.246665 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_25 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.471064 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_25_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -0.471064 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_26 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.471064 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_26_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 0.471064 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_bc -->
+    <visual>
+      <origin xyz="0.0406732 0.0291701 0.032171" rpy="1.53844 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_bc.stl"/>
+      </geometry>
+      <material name="mg4010_bc_material">
+        <color rgba="0 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0406732 0.0291701 0.032171" rpy="1.53844 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_bc.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_27 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -1.36866 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_27_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="1.5708 -1.36866 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_mg_28 -->
+    <visual>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 1.36866 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+      <material name="mg4010_mg_28_material">
+        <color rgba="0.501961 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0543732 0.0291701 0.032171" rpy="-1.5708 1.36866 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_mg.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮48_0_4 -->
+    <visual>
+      <origin xyz="0.0378732 0.035781 0.0421857" rpy="-1.5708 1.22068 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮48_0_4_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0378732 0.035781 0.0421857" rpy="-1.5708 1.22068 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮48_0_4_2 -->
+    <visual>
+      <origin xyz="0.0378732 0.0171916 0.0328888" rpy="-1.5708 -0.873714 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮48_0_4_2_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0378732 0.0171916 0.0328888" rpy="-1.5708 -0.873714 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part c_e683zz -->
+    <visual>
+      <origin xyz="0.0348732 0.0345377 0.0214384" rpy="-2.15425 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e683zz.stl"/>
+      </geometry>
+      <material name="c_e683zz_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0348732 0.0345377 0.0214384" rpy="-2.15425 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e683zz.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_pp_行星齿轮销钉 -->
+    <visual>
+      <origin xyz="0.0391732 0.035781 0.0421857" rpy="-1.5708 -0.331939 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pp_行星齿轮销钉.stl"/>
+      </geometry>
+      <material name="mg4010_pp_行星齿轮销钉_material">
+        <color rgba="1 0.0588235 0.345098 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0391732 0.035781 0.0421857" rpy="-1.5708 -0.331939 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pp_行星齿轮销钉.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_pc_行星支架 -->
+    <visual>
+      <origin xyz="0.0278732 0.0291701 0.032171" rpy="-0.0598571 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pc_行星支架.stl"/>
+      </geometry>
+      <material name="mg4010_pc_行星支架_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0278732 0.0291701 0.032171" rpy="-0.0598571 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pc_行星支架.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮12_0_4 -->
+    <visual>
+      <origin xyz="0.0306732 0.0291701 0.032171" rpy="-1.5708 1.49545 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮12_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮12_0_4_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0306732 0.0291701 0.032171" rpy="-1.5708 1.49545 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮12_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 耐磨垫片4x0_2 -->
+    <visual>
+      <origin xyz="0.0346732 0.035781 0.0421857" rpy="-1.5708 1.33922 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+      <material name="耐磨垫片4x0_2_material">
+        <color rgba="1 0.933333 0.270588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0346732 0.035781 0.0421857" rpy="-1.5708 1.33922 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮108_0_4 -->
+    <visual>
+      <origin xyz="0.0318732 0.0291701 0.032171" rpy="1.5708 -1.00952 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮108_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮108_0_4_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0318732 0.0291701 0.032171" rpy="1.5708 -1.00952 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮108_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part c_e683zz_2 -->
+    <visual>
+      <origin xyz="0.0348732 0.035781 0.0421857" rpy="-0.0598571 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e683zz.stl"/>
+      </geometry>
+      <material name="c_e683zz_2_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0348732 0.035781 0.0421857" rpy="-0.0598571 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e683zz.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮48_0_4_3 -->
+    <visual>
+      <origin xyz="0.0378732 0.0345377 0.0214384" rpy="1.5708 -0.173484 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮48_0_4_3_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0378732 0.0345377 0.0214384" rpy="1.5708 -0.173484 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 耐磨垫片4x0_2_2 -->
+    <visual>
+      <origin xyz="0.0379732 0.0352911 0.0419669" rpy="-1.5708 1.33989 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+      <material name="耐磨垫片4x0_2_2_material">
+        <color rgba="1 0.933333 0.270588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0379732 0.0352911 0.0419669" rpy="-1.5708 1.33989 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 6707 -->
+    <visual>
+      <origin xyz="0.0296732 0.0291701 0.032171" rpy="-0.017763 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/6707.stl"/>
+      </geometry>
+      <material name="6707_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0296732 0.0291701 0.032171" rpy="-0.017763 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/6707.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮48_0_4_4 -->
+    <visual>
+      <origin xyz="0.0378732 0.035781 0.0421857" rpy="-1.5708 1.22068 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮48_0_4_4_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0378732 0.035781 0.0421857" rpy="-1.5708 1.22068 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 耐磨垫片4x0_2_3 -->
+    <visual>
+      <origin xyz="0.0346732 0.0171916 0.0328888" rpy="1.5708 -0.292027 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+      <material name="耐磨垫片4x0_2_3_material">
+        <color rgba="1 0.933333 0.270588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0346732 0.0171916 0.0328888" rpy="1.5708 -0.292027 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_pf_行星固定架 -->
+    <visual>
+      <origin xyz="0.0346732 0.0291701 0.032171" rpy="0.98734 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pf_行星固定架.stl"/>
+      </geometry>
+      <material name="mg4010_pf_行星固定架_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0346732 0.0291701 0.032171" rpy="0.98734 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pf_行星固定架.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 耐磨垫片4x0_2_4 -->
+    <visual>
+      <origin xyz="0.0379732 0.0176261 0.032574" rpy="1.5708 -0.292696 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+      <material name="耐磨垫片4x0_2_4_material">
+        <color rgba="1 0.933333 0.270588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0379732 0.0176261 0.032574" rpy="1.5708 -0.292696 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_pp_行星齿轮销钉_2 -->
+    <visual>
+      <origin xyz="0.0391732 0.0171916 0.0328888" rpy="1.5708 -0.715258 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pp_行星齿轮销钉.stl"/>
+      </geometry>
+      <material name="mg4010_pp_行星齿轮销钉_2_material">
+        <color rgba="1 0.0588235 0.345098 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0391732 0.0171916 0.0328888" rpy="1.5708 -0.715258 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pp_行星齿轮销钉.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_pp_行星齿轮销钉_3 -->
+    <visual>
+      <origin xyz="0.0391732 0.0345377 0.0214384" rpy="1.5708 1.37914 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pp_行星齿轮销钉.stl"/>
+      </geometry>
+      <material name="mg4010_pp_行星齿轮销钉_3_material">
+        <color rgba="1 0.0588235 0.345098 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0391732 0.0345377 0.0214384" rpy="1.5708 1.37914 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_pp_行星齿轮销钉.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part c_e683zz_3 -->
+    <visual>
+      <origin xyz="0.0348732 0.0171916 0.0328888" rpy="2.03454 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e683zz.stl"/>
+      </geometry>
+      <material name="c_e683zz_3_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0348732 0.0171916 0.0328888" rpy="2.03454 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/c_e683zz.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 耐磨垫片4x0_2_5 -->
+    <visual>
+      <origin xyz="0.0379732 0.0345931 0.0219721" rpy="-1.5708 -0.754502 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+      <material name="耐磨垫片4x0_2_5_material">
+        <color rgba="1 0.933333 0.270588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0379732 0.0345931 0.0219721" rpy="-1.5708 -0.754502 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 圆柱齿轮48_0_4_5 -->
+    <visual>
+      <origin xyz="0.0378732 0.0345377 0.0214384" rpy="1.5708 -0.173484 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+      <material name="圆柱齿轮48_0_4_5_material">
+        <color rgba="1 1 1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0378732 0.0345377 0.0214384" rpy="1.5708 -0.173484 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/圆柱齿轮48_0_4.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x8__参照din7991_301 -->
+    <visual>
+      <origin xyz="0.0396732 0.0396513 0.0315429" rpy="2.51298 0 3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x8__参照din7991_301.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x8__参照din7991_301_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0396732 0.0396513 0.0315429" rpy="2.51298 0 3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x8__参照din7991_301.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x8__参照din7991_301_2 -->
+    <visual>
+      <origin xyz="0.0396732 0.0244735 0.041562" rpy="0.418583 -0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x8__参照din7991_301.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x8__参照din7991_301_2_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0396732 0.0244735 0.041562" rpy="0.418583 -0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x8__参照din7991_301.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 耐磨垫片4x0_2_6 -->
+    <visual>
+      <origin xyz="0.0346732 0.0345377 0.0214384" rpy="-1.5708 -0.755171 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+      <material name="耐磨垫片4x0_2_6_material">
+        <color rgba="1 0.933333 0.270588 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0346732 0.0345377 0.0214384" rpy="-1.5708 -0.755171 -1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/耐磨垫片4x0_2.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_br_轴承压圈 -->
+    <visual>
+      <origin xyz="0.0318732 0.0291701 0.032171" rpy="1.60847 0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_br_轴承压圈.stl"/>
+      </geometry>
+      <material name="mg4010_br_轴承压圈_material">
+        <color rgba="0.866667 0.866667 0.890196 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0318732 0.0291701 0.032171" rpy="1.60847 0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_br_轴承压圈.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mr104zz -->
+    <visual>
+      <origin xyz="0.0306732 0.0291701 0.032171" rpy="-0.0598571 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mr104zz.stl"/>
+      </geometry>
+      <material name="mr104zz_material">
+        <color rgba="0.776471 0.756863 0.737255 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0306732 0.0291701 0.032171" rpy="-0.0598571 -0 0"/>
+      <geometry>
+        <mesh filename="package://meshes/mr104zz.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part mg4010_gw_齿轮隔圈pro -->
+    <visual>
+      <origin xyz="0.0396732 0.0291701 0.032171" rpy="-1.5708 -0.861286 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_gw_齿轮隔圈pro.stl"/>
+      </geometry>
+      <material name="mg4010_gw_齿轮隔圈pro_material">
+        <color rgba="0.792157 0.819608 0.933333 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0396732 0.0291701 0.032171" rpy="-1.5708 -0.861286 1.5708"/>
+      <geometry>
+        <mesh filename="package://meshes/mg4010_gw_齿轮隔圈pro.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part 内六角沉头螺钉m2_5x8__参照din7991_301_3 -->
+    <visual>
+      <origin xyz="0.0396732 0.0233855 0.0234081" rpy="-1.67581 0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x8__参照din7991_301.stl"/>
+      </geometry>
+      <material name="内六角沉头螺钉m2_5x8__参照din7991_301_3_material">
+        <color rgba="1 1 0.501961 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0.0396732 0.0233855 0.0234081" rpy="-1.67581 0 -3.14159"/>
+      <geometry>
+        <mesh filename="package://meshes/内六角沉头螺钉m2_5x8__参照din7991_301.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Link center_connecter -->
+  <link name="center_connecter">
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <mass value="1e-09"/>
+      <inertia ixx="1e-09" ixy="0" ixz="0" iyy="1e-09" iyz="0" izz="1e-09"/>
+    </inertial>
+    <!-- Part 150 -->
+    <visual>
+      <origin xyz="-0.0677896 -0.158091 -0.11755" rpy="-1.34658 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes/150.stl"/>
+      </geometry>
+      <material name="150_material">
+        <color rgba="0.615686 0.811765 0.929412 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="-0.0677896 -0.158091 -0.11755" rpy="-1.34658 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes/150.stl"/>
+      </geometry>
+    </collision>
+    <!-- Part center_connecter -->
+    <visual>
+      <origin xyz="0 -0 -0.013" rpy="0.224219 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes/center_connecter.stl"/>
+      </geometry>
+      <material name="center_connecter_material">
+        <color rgba="0.627451 0.627451 0.643137 1"/>
+      </material>
+    </visual>
+    <collision>
+      <origin xyz="0 -0 -0.013" rpy="0.224219 1.5708 0"/>
+      <geometry>
+        <mesh filename="package://meshes/center_connecter.stl"/>
+      </geometry>
+    </collision>
+  </link>
+  <!-- Joint from 90deg_holder to center_connecter -->
+  <joint name="motor_joint" type="revolute">
+    <origin xyz="0.0278732 0.0291701 0.032171" rpy="1.5708 0.0598571 1.5708"/>
+    <parent link="90deg_holder"/>
+    <child link="center_connecter"/>
+    <axis xyz="0 0 1"/>
+    <limit effort="10" velocity="10" lower="-3.141592653589793" upper="3.141592653589793"/>
+  </joint>
+</robot>
