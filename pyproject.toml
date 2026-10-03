@@ -1,0 +1,24 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "arthrobot"
+version = "0.1.0"
+description = "A modular robot system: one motor module, an arm and a wheel-legged humanoid, from Onshape CAD to Isaac Lab training."
+readme = "README.md"
+requires-python = ">=3.11"
+# Isaac Sim 5.1, Isaac Lab 2.3 and rsl-rl-lib 3.0.1 are installed separately (see README).
+dependencies = ["numpy", "scipy", "trimesh"]
+
+[project.optional-dependencies]
+video = ["imageio[ffmpeg]", "opencv-python", "pillow", "tensorboard"]
+test = ["pytest"]
+
+[tool.setuptools.packages.find]
+where = ["source"]
+
+[tool.setuptools.package-data]
+arthrobot = ["data/*.json"]
+arthrobot_assets = ["*/hardware.json", "*/cad/**/*"]
+arthrobot_tasks = ["humanoid/getup/data/*.json", "humanoid/getup/data/pose_banks/*.json"]

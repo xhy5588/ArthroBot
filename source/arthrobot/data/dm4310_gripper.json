@@ -1,0 +1,34 @@
+{
+  "model": "DAMIAO DM4310",
+  "motor_mass_kg": 0.300,
+  "rated_output_torque_nm": 3.0,
+  "peak_output_torque_nm": 7.0,
+  "rated_output_speed_rpm": 120.0,
+  "maximum_no_load_output_speed_rpm": 200.0,
+  "internal_reduction": 10.0,
+  "pinion_module_mm": 1.0,
+  "pinion_teeth": 16,
+  "jaw_travel_m": 0.050,
+  "mechanism_mass_estimate_kg": 0.160,
+  "drive_stiffness_nm_per_rad": 8.0,
+  "drive_damping_nm_s_per_rad": 0.05,
+  "mimic_natural_frequency": 20000.0,
+  "mimic_damping_ratio": 1.0,
+  "target_jaw_speed_m_s": 0.015,
+  "sources": {
+    "motor": "https://files.seeedstudio.com/products/Damiao/DM-J4310-en.pdf",
+    "transmission": "https://github.com/Seeed-Projects/reBot-DevArm/blob/main/hardware/reBot_B601_DM/readme.md",
+    "controller_gain_reference": "https://github.com/Seeed-Projects/reBotArm_control_py/blob/main/config/rebotarm_dm.yaml",
+    "jaw_travel": "User confirmed 50 mm per jaw from open to closed."
+  },
+  "limitations": [
+    "Motor torque is already specified at the geared output; do not multiply by the internal reduction again.",
+    "7 Nm peak is recorded only; the simulation drive is capped at 3 Nm without a duty or thermal model.",
+    "Rack/pinion constraints are ideal and lossless; actual grip force, friction and backlash are uncalibrated.",
+    "The mechanism mass of 160 g is a carried-over estimate, not a measurement of this new gripper.",
+    "Motor body uses the existing RS00-named CAD envelope pending DM4310 geometry verification.",
+    "Motor rotor inertia is unavailable; no invented reflected rotor armature is assigned.",
+    "Position gain follows the upstream reference; damping is tuned to 0.05 Nm s/rad for simulation, not measured hardware tuning.",
+    "No-load speed is recorded as a reference. Position commands are rate-limited; hard joint-velocity constraints are disabled because they distort contact forces. A measured torque-speed curve is unavailable."
+  ]
+}

@@ -1,0 +1,15 @@
+# Generated robot files (URDF/USD builds, collision hulls, validation reports)
+/build/
+# Training runs, TensorBoard logs and recorded videos
+/logs/
+# Python
+__pycache__/
+*.pyc
+*.egg-info/
+.venv/
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
+# Onshape API credentials (never commit)
+**/onshape_credentials*

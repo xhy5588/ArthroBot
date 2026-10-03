@@ -1,0 +1,40 @@
+{
+  "mg4010": {
+    "manufacturer": "LKMTECH",
+    "model": "MG4010E-i10-V3",
+    "mass_kg": 0.25,
+    "voltage_v": 24,
+    "gear_ratio": 10,
+    "rated_torque_nm": 2.5,
+    "peak_torque_nm": 4.5,
+    "rated_speed_rpm": 260,
+    "max_speed_rpm": 320,
+    "rotor_inertia_kg_m2": 2.02e-05,
+    "backlash_arcmin": 8,
+    "source": {
+      "url": "https://aifitlab.com/products/lkmtech-mg4010e-i10-v3-motor",
+      "accessed": "2026-09-16",
+      "status": "Supplier listing; not independently measured."
+    },
+    "note": "The original arm motor. Simulation showed it cannot lift the arm in several poses."
+  },
+  "mg5010": {
+    "manufacturer": "LKMTECH",
+    "model": "MG5010E-i36-V3",
+    "mass_kg": 0.46,
+    "voltage_v": 24,
+    "gear_ratio": 36,
+    "rated_torque_nm": 13.0,
+    "peak_torque_nm": 25.0,
+    "rated_speed_rpm": 54.0,
+    "max_speed_rpm": 74.0,
+    "rotor_inertia_kg_m2": 8.5e-05,
+    "backlash_arcmin": 12,
+    "source": {
+      "url": "https://aifitlab.com/products/lkmtech-mg5010e-i36-v3-motor",
+      "accessed": "2026-09-16",
+      "status": "Supplier listing; not independently measured."
+    },
+    "note": "The current joint module. Its CAD still uses the MG4010 meshes as a placeholder."
+  }
+}

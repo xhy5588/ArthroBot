@@ -1,0 +1,12 @@
+{
+  "description": "Standard structural parts, keyed by the mesh file name used in the Onshape exports. Masses are the weights recorded for each printed or carbon part; whether each came from a scale or a slicer was not recorded.",
+  "parts": {
+    "_90deg_holder.stl": {"name": "90-degree motor holder", "material": "PLA", "mass_kg": 0.080},
+    "_150.stl": {"name": "150 mm rod", "material": "carbon fiber", "mass_kg": 0.008},
+    "_100mm.stl": {"name": "100 mm rod", "material": "carbon fiber", "mass_kg": 0.005333333333333333,
+                   "estimated": true, "note": "Scaled by length from the 8 g, 150 mm rod."},
+    "center_connecter.stl": {"name": "center connector", "material": "PLA", "mass_kg": 0.030},
+    "rod_90deg.stl": {"name": "90-degree rod connector", "material": "PLA", "mass_kg": 0.014},
+    "FixHex.stl": {"name": "FixHex adapter", "material": "PLA", "mass_kg": 0.007}
+  }
+}
