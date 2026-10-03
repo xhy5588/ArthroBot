@@ -1,0 +1,15 @@
+{
+  "motor": "mg5010",
+  "motor_note": "All 20 limb and wheel modules are MG5010E-i36-V3 (confirmed 2026-09-21); both grippers are DM4310.",
+  "gripper_mass_kg": 0.46,
+  "gripper_mass_note": "Each DM4310 motor is 300 g; each mechanism uses the arm's 160 g estimate.",
+  "torso_board_mass_kg": null,
+  "wheel_mass_kg": null,
+  "unknown_structure_density_kg_m3": 1240,
+  "unknown_mass_note": "The torso/battery board and wheels use solid-PLA-density geometry estimates until weighed. Set their masses above when known.",
+  "notes": [
+    "Motor CAD is MG4010 geometry used as a placeholder for the MG5010; packaging and mass distribution are unverified.",
+    "The 25 N m peak torque is not used. Friction, backlash, thermal limits, torque-speed curves and real controller gains are uncalibrated.",
+    "Rotary joints keep continuous CAD travel; viewer slider ranges are not mechanical joint limits."
+  ]
+}
