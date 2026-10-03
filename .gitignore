@@ -13,3 +13,6 @@ __pycache__/
 .DS_Store
 # Onshape API credentials (never commit)
 **/onshape_credentials*
+# Written next to the loaded checkpoint by scripts/rsl_rl/play.py
+/checkpoints/*/exported/
+/checkpoints/*/videos/
