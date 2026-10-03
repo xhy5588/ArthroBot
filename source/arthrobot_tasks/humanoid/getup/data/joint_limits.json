@@ -1,0 +1,242 @@
+{
+  "method": "single-joint convex-hull sweep from nominal standing pose",
+  "step_deg": 2.0,
+  "span_deg": 170.0,
+  "clearance_mm": 3.0,
+  "margin_deg": 5.0,
+  "wheels": "continuous",
+  "note": "Independent ranges only; combined poses rely on simulated self-collision. Not a substitute for real cable/bracket limits.",
+  "limits": {
+    "left_arm_1": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "left_arm_2": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -0.4886921905584123,
+      "lower_contact": [
+        "left_arm_3_body",
+        "left_hip_2_body"
+      ],
+      "lower": -0.4014257279586958,
+      "upper": 2.879793265790644
+    },
+    "left_arm_3": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -0.6981317007977318,
+      "lower_contact": [
+        "left_arm_6_body",
+        "left_wheel_body"
+      ],
+      "lower": -0.6108652381980153,
+      "upper": 2.879793265790644
+    },
+    "left_arm_4": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "left_arm_5": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 1.4311699866353502,
+      "upper_contact": [
+        "left_arm_6_body",
+        "left_arm_4_body"
+      ],
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 1.3439035240356338
+    },
+    "left_arm_6": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "right_arm_1": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "right_arm_2": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 0.5934119456780721,
+      "upper_contact": [
+        "right_arm_3_body",
+        "right_hip_2_body"
+      ],
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 0.5061454830783556
+    },
+    "right_arm_3": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 0.6283185307179586,
+      "upper_contact": [
+        "right_arm_6_body",
+        "right_wheel_body"
+      ],
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 0.5410520681182421
+    },
+    "right_arm_4": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "right_arm_5": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.2689280275926285,
+      "upper_contact": [
+        "right_arm_6_body",
+        "right_arm_4_body"
+      ],
+      "lower_clear_offset": -2.6878070480712677,
+      "lower_contact": [
+        "right_arm_6_body",
+        "right_arm_4_body"
+      ],
+      "lower": -2.6005405854715513,
+      "upper": 2.181661564992912
+    },
+    "right_arm_6": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "left_hip_1": {
+      "nominal": -0.1333233616321953,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.0943951023931953,
+      "lower_contact": [
+        "left_hip_2_body",
+        "left_arm_2_body"
+      ],
+      "lower": -2.140452001425674,
+      "upper": 2.746469904158449
+    },
+    "left_hip_2": {
+      "nominal": 0.014074263072275727,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 0.6981317007977318,
+      "upper_contact": [
+        "left_hip_2_body",
+        "torso"
+      ],
+      "lower_clear_offset": -0.9075712110370514,
+      "lower_contact": [
+        "left_knee_body",
+        "left_arm_3_body"
+      ],
+      "lower": -0.8062304853650591,
+      "upper": 0.6249395012702911
+    },
+    "left_knee": {
+      "nominal": -0.10266513800985806,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.5830872929516078,
+      "upper_contact": [
+        "left_knee_body",
+        "left_hip_1_body"
+      ],
+      "lower_clear_offset": -2.652900463031381,
+      "lower_contact": [
+        "left_wheel_body",
+        "left_arm_2_body"
+      ],
+      "lower": -2.668299138441523,
+      "upper": 2.393155692342033
+    },
+    "right_hip_1": {
+      "nominal": 0.14347178030756683,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.059488517353309,
+      "upper_contact": [
+        "right_hip_2_body",
+        "right_arm_2_body"
+      ],
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.736321485483077,
+      "upper": 2.1156938350611596
+    },
+    "right_hip_2": {
+      "nominal": -0.001308887924637405,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 0.6981317007977318,
+      "upper_contact": [
+        "right_hip_2_body",
+        "torso"
+      ],
+      "lower_clear_offset": -0.9773843811168246,
+      "lower_contact": [
+        "right_knee_body",
+        "right_arm_3_body"
+      ],
+      "lower": -0.8914268064417455,
+      "upper": 0.6095563502733778
+    },
+    "right_knee": {
+      "nominal": 0.06332833297446908,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.652900463031381,
+      "upper_contact": [
+        "right_wheel_body",
+        "right_arm_2_body"
+      ],
+      "lower_clear_offset": -2.5830872929516078,
+      "lower_contact": [
+        "right_knee_body",
+        "right_hip_1_body"
+      ],
+      "lower": -2.4324924973774222,
+      "upper": 2.628962333406134
+    }
+  }
+}

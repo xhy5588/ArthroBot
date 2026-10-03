@@ -1,0 +1,301 @@
+{
+  "task": "getup_host",
+  "started": "20260926_231803",
+  "num_envs": 4096,
+  "steps_per_env": 24,
+  "iterations": 4000,
+  "observation": 384,
+  "critic": 413,
+  "actions": 20,
+  "reward_groups": [
+    "task",
+    "regu",
+    "style",
+    "target",
+    "safety"
+  ],
+  "group_weights": [
+    2.5,
+    0.1,
+    1.0,
+    1.0,
+    1.5
+  ],
+  "pull_force_initial_n": 65.0,
+  "pull_step_n": 13.0,
+  "pull_gate": "held-out evaluation stood_2s >= 0.15",
+  "final_action_bound": 0.25,
+  "bound_iterations": 3000,
+  "entropy": 0.01,
+  "max_action_std": 1.0,
+  "self_contact_weight": 3.0,
+  "self_contact_threshold_n": 1.0,
+  "inherited_contact_weight": 1.0,
+  "joint_speed_weight": 1.0,
+  "joint_speed_soft": 0.5,
+  "torque_weight": 0.25,
+  "torque_soft_nm": 9.0,
+  "torso_rate_weight": 1.0,
+  "torso_rate_soft": 2.0,
+  "posture_l1_weight": 0.3,
+  "arm_posture_l1_weight": 1.0,
+  "posture_progress_weight": 1.0,
+  "min_action_std": 0.2,
+  "ready_tolerance": 0.25,
+  "servo_speed_limit": 0.0,
+  "standing_bank": "assets/getup_bank_standing_7_800.json",
+  "standing_fraction": 0.25,
+  "height_schedule_s": 3.0,
+  "gamma": 0.997,
+  "strength_range": [
+    0.85,
+    1.0
+  ],
+  "torque_limit_nm": 13.0,
+  "kp": 80.0,
+  "kd": 4.0,
+  "physics": "TGS 8/1 at 240 Hz, 60 Hz control",
+  "asset": "/home/eric/AnotherIsaacSim/onshape/modular_humanoid_bipad/training/assets/getup_robot.usd",
+  "joint_limits": {
+    "left_arm_1": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "left_arm_2": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -0.4886921905584123,
+      "lower_contact": [
+        "left_arm_3_body",
+        "left_hip_2_body"
+      ],
+      "lower": -0.4014257279586958,
+      "upper": 2.879793265790644
+    },
+    "left_arm_3": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -0.6981317007977318,
+      "lower_contact": [
+        "left_arm_6_body",
+        "left_wheel_body"
+      ],
+      "lower": -0.6108652381980153,
+      "upper": 2.879793265790644
+    },
+    "left_arm_4": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "left_arm_5": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 1.4311699866353502,
+      "upper_contact": [
+        "left_arm_6_body",
+        "left_arm_4_body"
+      ],
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 1.3439035240356338
+    },
+    "left_arm_6": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "right_arm_1": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "right_arm_2": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 0.5934119456780721,
+      "upper_contact": [
+        "right_arm_3_body",
+        "right_hip_2_body"
+      ],
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 0.5061454830783556
+    },
+    "right_arm_3": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 0.6283185307179586,
+      "upper_contact": [
+        "right_arm_6_body",
+        "right_wheel_body"
+      ],
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 0.5410520681182421
+    },
+    "right_arm_4": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "right_arm_5": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.2689280275926285,
+      "upper_contact": [
+        "right_arm_6_body",
+        "right_arm_4_body"
+      ],
+      "lower_clear_offset": -2.6878070480712677,
+      "lower_contact": [
+        "right_arm_6_body",
+        "right_arm_4_body"
+      ],
+      "lower": -2.6005405854715513,
+      "upper": 2.181661564992912
+    },
+    "right_arm_6": {
+      "nominal": 0.0,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.879793265790644,
+      "upper": 2.879793265790644
+    },
+    "left_hip_1": {
+      "nominal": -0.1333233616321953,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.9670597283903604,
+      "upper_contact": null,
+      "lower_clear_offset": -2.0943951023931953,
+      "lower_contact": [
+        "left_hip_2_body",
+        "left_arm_2_body"
+      ],
+      "lower": -2.140452001425674,
+      "upper": 2.746469904158449
+    },
+    "left_hip_2": {
+      "nominal": 0.014074263072275727,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 0.6981317007977318,
+      "upper_contact": [
+        "left_hip_2_body",
+        "torso"
+      ],
+      "lower_clear_offset": -0.9075712110370514,
+      "lower_contact": [
+        "left_knee_body",
+        "left_arm_3_body"
+      ],
+      "lower": -0.8062304853650591,
+      "upper": 0.6249395012702911
+    },
+    "left_knee": {
+      "nominal": -0.10266513800985806,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.5830872929516078,
+      "upper_contact": [
+        "left_knee_body",
+        "left_hip_1_body"
+      ],
+      "lower_clear_offset": -2.652900463031381,
+      "lower_contact": [
+        "left_wheel_body",
+        "left_arm_2_body"
+      ],
+      "lower": -2.668299138441523,
+      "upper": 2.393155692342033
+    },
+    "right_hip_1": {
+      "nominal": 0.14347178030756683,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.059488517353309,
+      "upper_contact": [
+        "right_hip_2_body",
+        "right_arm_2_body"
+      ],
+      "lower_clear_offset": -2.9670597283903604,
+      "lower_contact": null,
+      "lower": -2.736321485483077,
+      "upper": 2.1156938350611596
+    },
+    "right_hip_2": {
+      "nominal": -0.001308887924637405,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 0.6981317007977318,
+      "upper_contact": [
+        "right_hip_2_body",
+        "torso"
+      ],
+      "lower_clear_offset": -0.9773843811168246,
+      "lower_contact": [
+        "right_knee_body",
+        "right_arm_3_body"
+      ],
+      "lower": -0.8914268064417455,
+      "upper": 0.6095563502733778
+    },
+    "right_knee": {
+      "nominal": 0.06332833297446908,
+      "contact_at_nominal": null,
+      "upper_clear_offset": 2.652900463031381,
+      "upper_contact": [
+        "right_wheel_body",
+        "right_arm_2_body"
+      ],
+      "lower_clear_offset": -2.5830872929516078,
+      "lower_contact": [
+        "right_knee_body",
+        "right_hip_1_body"
+      ],
+      "lower": -2.4324924973774222,
+      "upper": 2.628962333406134
+    }
+  },
+  "resumed_from": "getup_runs/20260926_153231/model_21500.pt",
+  "source_sha256": {
+    "getup_env.py": "e747ea5b42af31eed826c4c2bbce1fb9ba4504d30d9e5a642820dc20d1599964",
+    "getup_ppo.py": "71db3cebe8855f04b523b3eace7e0dbfba4e719e4bb9eb88c5d5b5bb17329ea0",
+    "getup_train.py": "d375956de2a20ce93ac6a0e63bdde7b54c0c8fe9f1ce861db023fc3debc254d0",
+    "getup_asset.py": "7f9f006973f20db466255d13f0acac2e3dd9d41bde9c91006e365be5f9baf07e",
+    "getup_poses.py": "a367dcf72bb9f156dbf88b8896e6806a3a3189627865803d821340e05ea252e3",
+    "getup_joint_limits.py": "6a0d26d32e37588210fbdb526e6475f7d811211d9e86c71fae8ee5fbb17764b0"
+  }
+}
