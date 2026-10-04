@@ -192,6 +192,8 @@ final-stage command; every setting is also recorded in
 python scripts/humanoid/train_getup.py --num-envs 4096                    # train (headless); logs/humanoid_getup/
 python scripts/humanoid/evaluate_getup.py                                 # held-out evaluation + self-contact by body
 python scripts/humanoid/record_getup.py                                   # MP4 of the five start families
+python scripts/humanoid/watch_getup_run.py --run-dir logs/humanoid_getup/<run> --every 250 --handover
+                                                                          # video + hand-over test per new checkpoint
 python scripts/humanoid/validate_standing_physics.py                      # standing policy in the get-up physics
 python scripts/humanoid/benchmark_physics.py --num-envs 1024              # physics throughput
 python scripts/humanoid/make_pose_banks.py lying --seed 42 --per-family 400
