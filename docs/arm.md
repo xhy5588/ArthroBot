@@ -122,6 +122,19 @@ python scripts/arm/check_reach_env.py          # hold, limits, gains, contacts, 
 Training past about 600 updates made the policy worse, at both entropy 0.01 and 0.001.
 The worst targets are close to the base, where the arm has to fold.
 
+**Demo clip** (`docs/media/arm_reach.gif`). Rendering needs the RTX workaround (see the
+README). The target sphere is enlarged to 3 cm for visibility; the task itself is unchanged.
+
+```bash
+python -m arthrobot.sim.rtx_compat python scripts/rsl_rl/play.py --task ArthroBot-Arm-Reach-Play-v0 \
+    --checkpoint checkpoints/arm_reach/model_550.pt --headless --video --video_length 300 --num_envs 1 \
+    'env.commands.tcp_target.resampling_time_range=[2.0,2.0]' \
+    'env.commands.tcp_target.target_marker_cfg.markers.sphere.radius=0.03' \
+    'env.viewer.eye=[0.75,0.62,0.42]' 'env.viewer.lookat=[0.22,0.0,0.14]'
+python scripts/make_gif.py checkpoints/arm_reach/videos/play/rl-video-step-0.mp4 docs/media/arm_reach.gif \
+    --width 640 --fps 12 --duration 8 --crop 900:506:200:120 --colors 64
+```
+
 ## Not modeled yet
 
 - Real joint ranges and cable limits.

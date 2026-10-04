@@ -202,6 +202,19 @@ python scripts/humanoid/sweep_joint_limits.py
 stood, 2.06 s to stand. Stop training with SIGTERM: the trainer finishes the current
 update, saves and exits.
 
+**Demo clips** (`docs/media/humanoid_getup*.gif`). They need the RTX workaround (see
+the README) and are written to `build/humanoid_training/getup_videos/`:
+
+```bash
+python scripts/humanoid/record_getup.py --plain                                  # all five start families, 10 s
+python scripts/humanoid/record_getup.py --plain --families front --tile-width 800 --tile-height 450 \
+    --seconds 7 --camera-offset 1.3 -1.3 0.6                                     # one robot, close up
+python scripts/make_gif.py build/humanoid_training/getup_videos/update_025500_plain.mp4 \
+    docs/media/humanoid_getup_starts.gif --width 840 --fps 10 --colors 64
+python scripts/make_gif.py build/humanoid_training/getup_videos/update_025500_front_plain.mp4 \
+    docs/media/humanoid_getup.gif --width 640 --fps 12 --colors 64
+```
+
 **Joint-limit provenance.** The committed `joint_limits.json` was swept from an
 earlier standing pose, which differs from the current one by up to 2.6° (left hip).
 The included policy was trained with these limits, so they stay unchanged.
