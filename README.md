@@ -14,17 +14,19 @@ only the ArthroBot line and runs on the official Isaac Lab.
 The included policies in simulation. These are current training results, not final
 versions.
 
-| Arm: reaching random targets (green sphere) | Humanoid: getting up from lying face down |
+| Arm: reaching random targets (green sphere) | Humanoid: getting up, then turning to the standing pose |
 | --- | --- |
-| <img src="docs/media/arm_reach.gif" width="100%" alt="The arm moves its gripper to a new green target every 2 seconds"> | <img src="docs/media/humanoid_getup.gif" width="100%" alt="The humanoid pushes itself up from lying face down and balances on its wheels"> |
-| a new target every 2 s; median error 2.2 mm | stands up in about 2 s with no assistance, then balances on its wheels |
+| <img src="docs/media/arm_reach.gif" width="100%" alt="The arm moves its gripper to a new green target every 2 seconds"> | <img src="docs/media/humanoid_getup_to_standing.gif" width="100%" alt="The humanoid gets up from lying face down, then the standing policy lowers its arms to the standing pose and it balances on its wheels"> |
+| a new target every 2 s; median error 2.2 mm | gets up from lying face down with no assistance; after 1 s of standing the standing policy takes over, brings the arms down to the standing pose and balances |
 
 <img src="docs/media/humanoid_getup_starts.gif" width="100%" alt="Five humanoids get up from lying on the back, front, left side, right side and a random orientation">
 
-The same get-up policy from held-out poses of all five start families: lying on the
+The get-up policy alone from held-out poses of all five start families: lying on the
 back, front, left or right side, or in a random orientation. All five stand up; the
-left-side start takes a few seconds longer. The arms do not yet return to the
-standing pose (see [the hand-over problem](docs/humanoid.md#hand-over-from-get-up-to-standing)).
+left-side start takes a few seconds longer. On its own the get-up policy keeps the
+arms raised. The hand-over to the standing policy (above) brings them down, but so far
+it works in only about half of the cases
+(see [the hand-over](docs/humanoid.md#hand-over-from-get-up-to-standing)).
 
 | Stage | What exists | Details |
 | --- | --- | --- |

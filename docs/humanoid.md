@@ -202,18 +202,24 @@ python scripts/humanoid/sweep_joint_limits.py
 stood, 2.06 s to stand. Stop training with SIGTERM: the trainer finishes the current
 update, saves and exits.
 
-**Demo clips** (`docs/media/humanoid_getup*.gif`). They need the RTX workaround (see
-the README) and are written to `build/humanoid_training/getup_videos/`:
+**Demo clips** (`docs/media/humanoid_*.gif`). They need the RTX workaround (see the
+README) and are written to `build/humanoid_training/getup_videos/`. Each rendered robot
+needs about 1.5 GB of host memory, so record one family per run:
 
 ```bash
-python scripts/humanoid/record_getup.py --plain                                  # all five start families, 10 s
-python scripts/humanoid/record_getup.py --plain --families front --tile-width 800 --tile-height 450 \
-    --seconds 7 --camera-offset 1.3 -1.3 0.6                                     # one robot, close up
-python scripts/make_gif.py build/humanoid_training/getup_videos/update_025500_plain.mp4 \
-    docs/media/humanoid_getup_starts.gif --width 840 --fps 10 --colors 64
-python scripts/make_gif.py build/humanoid_training/getup_videos/update_025500_front_plain.mp4 \
-    docs/media/humanoid_getup.gif --width 640 --fps 12 --colors 64
+V=build/humanoid_training/getup_videos
+python scripts/humanoid/record_getup.py --plain                                  # get-up, all five start families, 10 s
+python scripts/make_gif.py $V/update_025500_plain.mp4 docs/media/humanoid_getup_starts.gif --width 840 --fps 10 --colors 64
+
+# Get-up, then hand-over to the standing policy: 4 starts of one family, 14 s
+python scripts/humanoid/record_getup.py --plain --handover --families front --poses-per-family 4 --seconds 14 \
+    --tile-width 800 --tile-height 450
+python scripts/make_gif.py $V/update_025500_front_x4_handover_plain.mp4 docs/media/humanoid_getup_to_standing.gif \
+    --crop 800:450:800:0 --width 600 --fps 10 --duration 10 --colors 64   # robot "front 2"
 ```
+
+`humanoid_handover_successes.gif` combines four such runs (480×270 tiles): robot 2 of
+`back` and `front`, and robot 1 of `left` and `right`.
 
 **Joint-limit provenance.** The committed `joint_limits.json` was swept from an
 earlier standing pose, which differs from the current one by up to 2.6° (left hip).
@@ -234,6 +240,17 @@ over.
 | kept the get-up policy (320 robots) | 100% |
 
 (An earlier 20 s test with 320 robots gave 57.5%.)
+
+When it works, the standing policy swings the arms down to the standing pose within
+about a second and then balances. `record_getup.py --handover` records it. A run with
+4 held-out starts per family, without randomization, gave these results:
+
+- **11 of 20 robots** ended in the standing pose and stayed upright;
+- by family: left 4/4, right 3/4, back 2/4, front 2/4, random orientation 0/4.
+
+One success from each of the first four families:
+
+<img src="media/humanoid_handover_successes.gif" width="100%" alt="Four humanoids from back, front, left and right starts stand in the standing pose under the standing policy">
 
 **Main open problem.** The get-up policy never brings its arms back to the standing
 pose. At hand-over every robot has an arm outside the ±0.25 rad range the standing
