@@ -70,9 +70,11 @@ class ActorCritic(nn.Module):
 class MultiCriticPPO:
     def __init__(self, model: ActorCritic, group_weights, num_envs: int, steps: int, device, gamma=.99, lam=.95,
                  clip=.2, epochs=5, minibatches=4, lr=1e-3, desired_kl=.01, entropy=.005, value_coef=1.,
-                 max_grad_norm=1., smooth_policy=.1, smooth_value=.1, min_std=.05, max_std=1.):
+                 max_grad_norm=1., smooth_policy=.1, smooth_value=.1, min_std=.05, max_std=1., group_names=None):
         self.model, self.device = model, device
         self.weights = torch.tensor(group_weights, device=device)
+        self.group_names = tuple(group_names or (f'group_{i}' for i in range(len(group_weights))))
+        self.diagnostics = {}
         self.gamma, self.lam, self.clip = gamma, lam, clip
         self.epochs, self.minibatches, self.lr, self.desired_kl = epochs, minibatches, lr, desired_kl
         self.entropy, self.value_coef, self.max_grad_norm = entropy, value_coef, max_grad_norm
@@ -144,6 +146,27 @@ class MultiCriticPPO:
         advantages = (advantages - advantages.mean((0, 1))) / (advantages.std((0, 1)) + 1e-8)
         combined = (advantages * self.weights).sum(-1)
         storage['combined'] = (combined - combined.mean()) / (combined.std() + 1e-8)
+        self.diagnostics = self._group_diagnostics(advantages, combined)
+
+    @torch.no_grad()
+    def _group_diagnostics(self, normalized: torch.Tensor, combined: torch.Tensor) -> dict:
+        """Per reward group: spread of the raw advantages (before normalization), correlation of the
+        weighted group advantage with the combined advantage (how much it drives the update), and
+        the explained variance of its value head (how well its critic predicts its returns)."""
+        storage = self.storage
+        raw = storage['advantages'].flatten(0, 1)
+        returns = storage['returns'].flatten(0, 1)
+        combined = combined.flatten()
+        combined = (combined - combined.mean()) / (combined.std() + 1e-8)
+        diagnostics = {}
+        for i, name in enumerate(self.group_names):
+            weighted = normalized[..., i].flatten() * self.weights[i]
+            weighted = (weighted - weighted.mean()) / (weighted.std() + 1e-8)
+            explained = 1. - raw[:, i].var() / returns[:, i].var().clamp_min(1e-8)
+            diagnostics[f'advantage_raw_std/{name}'] = float(raw[:, i].std())
+            diagnostics[f'advantage_share/{name}'] = float((weighted * combined).mean())
+            diagnostics[f'explained_variance/{name}'] = float(explained)
+        return diagnostics
 
     def update(self) -> dict:
         total = self.steps * self.num_envs

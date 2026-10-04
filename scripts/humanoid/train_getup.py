@@ -25,6 +25,12 @@ standing starts switched on (every value is in checkpoints/humanoid_getup/settin
         --torque-weight 0.25 --torso-rate-weight 1 --posture-l1-weight 0.3 --arm-posture-l1-weight 1 \\
         --posture-progress-weight 1 --height-schedule 3 --standing-fraction 0.25 \\
         --standing-bank source/arthrobot_tasks/humanoid/getup/data/pose_banks/standing_seed7_800.json
+
+Ending pose as in HoST (--arm-pose-width 0.1, --leg-pose-width 1): near standing, the
+target group rewards being close to the standing policy's pose with a wide Gaussian, so
+the arms are pulled down even from far away; the best checkpoint then ranks robots that
+also hold their arms in that pose. The included policy used the narrow all-limb posture
+term instead (--posture-weight 1), which pays nothing when the arms are far away.
 """
 import argparse
 import csv
@@ -48,7 +54,8 @@ GETUP_SOURCES = [Path(__file__).resolve(), *sorted(Path(getup_package.__file__).
 TRAINING_SUMMARY_COLUMNS = tuple(f'train_{key}' for key in (
     'episodes', 'stood_2s', 'standing_at_end', 'max_height_m', 'first_standing_s', 'clean_success',
     'self_contact_episodes', 'ready_success', 'clean_new_success', 'handover_ready_success', 'peak_limb_speed',
-    'saturated_s', 'standing_start_episodes', 'standing_start_ready', 'standing_start_stayed'))
+    'saturated_s', 'standing_start_episodes', 'standing_start_ready', 'standing_start_stayed', 'arm_ready_success',
+    'final_arm_error_rad'))
 
 parser = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
 parser.add_argument('--num-envs', type=int, default=512)
@@ -87,6 +94,10 @@ parser.add_argument('--posture-progress-weight', type=float, default=0.)
 parser.add_argument('--height-schedule', type=float, default=0., help='Stand-up duration target, s (0: off).')
 parser.add_argument('--strength-min', type=float, default=.9, help='Motor strength randomization, lower bound.')
 parser.add_argument('--strength-max', type=float, default=1.1)
+parser.add_argument('--posture-weight', type=float, default=1., help='Narrow all-limb posture term near standing.')
+parser.add_argument('--arm-pose-width', type=float, default=0., help='HoST-style arm ending pose (0: off; HoST uses 0.1).')
+parser.add_argument('--leg-pose-width', type=float, default=0., help='HoST-style leg ending pose (0: off).')
+parser.add_argument('--episode-length', type=float, default=10., help='Episode length, s.')
 parser.add_argument('--smoke', action='store_true', help='Pipeline check: log every update; run folder suffix _smoke.')
 from isaaclab.app import AppLauncher  # noqa: E402
 
@@ -116,7 +127,9 @@ def environment_settings() -> dict:
                 torso_rate_weight=args.torso_rate_weight, torso_rate_soft=args.torso_rate_soft,
                 posture_l1_weight=args.posture_l1_weight, arm_posture_l1_weight=args.arm_posture_l1_weight,
                 posture_progress_weight=args.posture_progress_weight, height_schedule_s=args.height_schedule,
-                strength_range=(args.strength_min, args.strength_max), standing_fraction=args.standing_fraction)
+                strength_range=(args.strength_min, args.strength_max), standing_fraction=args.standing_fraction,
+                posture_weight=args.posture_weight, arm_pose_width=args.arm_pose_width,
+                leg_pose_width=args.leg_pose_width)
 
 
 def main():
@@ -145,6 +158,7 @@ def main():
     cfg.asset_path, cfg.pose_bank = str(usd_path), str(run_dir / 'training_bank.json')
     cfg.scene.num_envs, cfg.seed, cfg.sim.device = args.num_envs, args.seed, args.device
     cfg.standing_fraction = args.standing_fraction
+    cfg.episode_length_s = args.episode_length
     apply_run_settings(cfg, environment_settings())
     env = GetupEnv(cfg)
     held_out_first_row = env.append_poses(held_out_bank)
@@ -153,18 +167,19 @@ def main():
     group_weights = (2.5, .1, 1., 1., args.safety_weight)
     model = ActorCritic(cfg.observation_space, cfg.state_space, cfg.action_space, len(REWARD_GROUPS)).to(env.device)
     ppo = MultiCriticPPO(model, group_weights, env.num_envs, args.steps_per_env, env.device, entropy=args.entropy,
-                         max_std=args.max_std, min_std=args.min_std, gamma=args.gamma)
+                         max_std=args.max_std, min_std=args.min_std, gamma=args.gamma, group_names=REWARD_GROUPS)
     state = dict(iteration=0, pull_force=args.pull_force, pull_changes=[], best=None)
     if args.checkpoint:
         saved = torch.load(args.checkpoint, map_location=env.device, weights_only=False)
         ppo.load_state_dict(saved['ppo'])
         state.update(saved['state'])
-        with torch.no_grad():
-            # Apply the std bounds before the first rollout so the first update's KL is not inflated by the clamp.
-            model.log_std.clamp_(math.log(args.min_std), math.log(args.max_std))
         if args.run_dir is None:
             # A new run folder tracks its own best checkpoint; the source run keeps its best.pt.
             state['resumed_best'], state['best'] = state['best'], None
+
+    with torch.no_grad():
+        # Apply the std bounds before the first rollout so the first update's KL is not inflated by the clamp.
+        model.log_std.clamp_(math.log(args.min_std), math.log(args.max_std))
 
     settings = dict(task='humanoid_getup', started=stamp, num_envs=env.num_envs, steps_per_env=args.steps_per_env,
                     iterations=args.iterations, observation=cfg.observation_space, critic=cfg.state_space,
@@ -173,7 +188,8 @@ def main():
                     pull_gate=f'held-out evaluation stood_2s >= {args.pull_eval_success}',
                     final_action_bound=args.final_action_bound, bound_iterations=args.bound_iterations,
                     entropy=args.entropy, gamma=args.gamma, min_action_std=args.min_std, max_action_std=args.max_std,
-                    **environment_settings(), self_contact_threshold_n=cfg.self_contact_n,
+                    **environment_settings(), episode_length_s=args.episode_length,
+                    self_contact_threshold_n=cfg.self_contact_n,
                     ready_tolerance=cfg.ready_tolerance, standing_bank=str(args.standing_bank),
                     training_bank=str(args.training_bank), held_out_bank=str(args.held_out_bank),
                     torque_limit_nm=cfg.torque_limit, kp=cfg.kp, kd=cfg.kd, physics='TGS 8/1 at 240 Hz, 60 Hz control',
@@ -245,7 +261,9 @@ def main():
                    collection_s=collection_s, pull_force_n=state['pull_force'], action_bound=env.action_bound,
                    torque_saturation=float(env.control_stats[0] / control_steps),
                    torque_rms_nm=float(env.control_stats[1] / control_steps),
-                   self_contact_step_fraction=float(env.self_contact_steps / control_steps),
+                   self_contact_step_fraction=float(env.self_contact_steps / control_steps), **ppo.diagnostics,
+                   **{f'action_std_{part}': float(model.log_std[joints].exp().mean())
+                      for part, joints in (('arms', slice(0, 12)), ('legs', slice(12, 18)), ('wheels', slice(18, 20)))},
                    **stats, **{f'train_{key}': value for key, value in train.items()},
                    **{f'group_reward_{group}': float(ppo.storage['rewards'][..., i].mean() / env.step_dt)
                       for i, group in enumerate(REWARD_GROUPS)})
@@ -266,7 +284,8 @@ def main():
         if update % 10 == 0 or args.smoke:
             print(f'GETUP_TRAIN: update {update} {row["transitions_per_s"]:.0f} transitions/s '
                   f'pull {state["pull_force"]:.0f} N bound {env.action_bound:.2f} stood_2s {train.get("stood_2s")} '
-                  f'max_height {train.get("max_height_m")} kl {stats["kl"]:.4f} std {stats["action_std"]:.3f} '
+                  f'max_height {train.get("max_height_m")} arm_ready {train.get("arm_ready_success")} '
+                  f'kl {stats["kl"]:.4f} std {stats["action_std"]:.3f} '
                   f'lr {stats["learning_rate"]:.2e}', flush=True)
         write_json(run_dir / 'status.json', dict(state='training', update=update, pull_force_n=state['pull_force'],
                                                  action_bound=env.action_bound, train=train, pid=os.getpid(),
@@ -279,7 +298,8 @@ def main():
                 if isinstance(value, (int, float)) and key != 'update':
                     writer.add_scalar(f'Evaluation/{key}', value, update)
             print(f'GETUP_EVAL: update {update} stood_2s {report.get("stood_2s")} '
-                  f'end {report.get("standing_at_end")} ready {report.get("ready_success")} '
+                  f'end {report.get("standing_at_end")} arm_ready {report.get("arm_ready_success")} '
+                  f'final_arm_error {report.get("final_arm_error_rad")} ready {report.get("ready_success")} '
                   f'clean_new {report.get("clean_new_success")} handover_ready {report.get("handover_ready_success")} '
                   f'time_to_stand {report.get("first_standing_s")} peak_speed {report.get("peak_limb_speed")}', flush=True)
             if state['pull_force'] > 0 and report.get('stood_2s', 0.) >= args.pull_eval_success:
@@ -288,8 +308,13 @@ def main():
                                                   eval_stood_2s=report['stood_2s']))
                 print(f'GETUP_CURRICULUM: update {update} pull force -> {state["pull_force"]:.1f} N', flush=True)
             writer.add_scalar('Evaluation/pull_force_after_n', state['pull_force'], update)
-            score = (report.get('handover_ready_success', 0.), report.get('clean_new_success', 0.),
-                     report.get('stood_2s', 0.))
+            if args.arm_pose_width > 0:
+                # Stood up and settled into the ending pose first, then got up at all.
+                score = (report.get('arm_ready_success', 0.), report.get('stood_2s', 0.),
+                         report.get('clean_new_success', 0.))
+            else:
+                score = (report.get('handover_ready_success', 0.), report.get('clean_new_success', 0.),
+                         report.get('stood_2s', 0.))
             if state['best'] is None or score > tuple(state['best']['score']):
                 state['best'] = dict(update=update, score=score)
                 save(run_dir / 'best.pt')

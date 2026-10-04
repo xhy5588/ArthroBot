@@ -19,7 +19,7 @@ CHECKPOINT = STANDING_CHECKPOINT.parents[1] / 'humanoid_getup/model_25500.pt'
 RECORDED_CFG_FIELDS = ('self_contact_weight', 'inherited_contact_weight', 'joint_speed_weight', 'joint_speed_soft',
                        'torque_weight', 'torque_soft_nm', 'torso_rate_weight', 'torso_rate_soft', 'posture_l1_weight',
                        'arm_posture_l1_weight', 'posture_progress_weight', 'ready_tolerance', 'height_schedule_s',
-                       'strength_range')
+                       'strength_range', 'posture_weight', 'arm_pose_width', 'leg_pose_width')
 
 
 def apply_run_settings(cfg, settings: dict) -> None:
@@ -105,6 +105,9 @@ def summarize(records: list[dict], families) -> dict:
     summary['self_contact_standing_episodes'] = fraction(lambda r: r['self_contact_standing_s'] > 0)
     # Stood 2 s without any self-contact after the motors switched on.
     summary['clean_success'] = fraction(lambda r: r['stood_2s'] and r['self_contact_s'] == 0)
+    # Ending pose: every arm joint within the ready tolerance of the standing pose for 1 s while standing.
+    summary['arm_ready_success'] = fraction(lambda r: r['best_arm_ready_s'] >= 1.)
+    summary['final_arm_error_rad'] = mean('final_arm_error_rad')
     times = [r['first_standing_s'] for r in records if r['first_standing_s'] is not None]
     summary['first_standing_s'] = sum(times) / len(times) if times else None
     for family in families:

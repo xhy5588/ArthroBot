@@ -176,15 +176,36 @@ def test_multi_critic_ppo_runs_one_update():
 def test_summary_counts_clean_and_ready_successes():
     record = dict(family='back', stood_2s=True, standing_at_end=True, max_height_m=.55, first_standing_s=2.,
                   new_contact_s=0., inherited_contact_s=0., best_ready_s=1.5, peak_limb_speed=4., over_speed_s=0.,
-                  saturated_s=0., peak_torso_rate=2., self_contact_s=0., self_contact_standing_s=0.)
-    touching = dict(record, family='front', new_contact_s=.2, self_contact_s=.2, best_ready_s=0.)
-    fallen = dict(record, family='front', stood_2s=False, standing_at_end=False, first_standing_s=None)
+                  saturated_s=0., peak_torso_rate=2., self_contact_s=0., self_contact_standing_s=0.,
+                  best_arm_ready_s=1.2, final_arm_error_rad=.1)
+    touching = dict(record, family='front', new_contact_s=.2, self_contact_s=.2, best_ready_s=0., best_arm_ready_s=0.)
+    fallen = dict(record, family='front', stood_2s=False, standing_at_end=False, first_standing_s=None,
+                  best_arm_ready_s=0., final_arm_error_rad=2.8)
     summary = summarize([record, touching, fallen], ('back', 'front'))
     assert summary['stood_2s'] == pytest.approx(2 / 3)
     assert summary['clean_new_success'] == pytest.approx(1 / 3)
     assert summary['handover_ready_success'] == pytest.approx(1 / 3)
     assert summary['first_standing_s'] == pytest.approx(2.)
     assert summary['front_stood_2s'] == pytest.approx(.5) and summary['back_episodes'] == 1
+    assert summary['arm_ready_success'] == pytest.approx(1 / 3)
+    assert summary['final_arm_error_rad'] == pytest.approx(1.)
+
+
+def test_group_diagnostics_report_every_group():
+    torch.manual_seed(2)
+    model = ActorCritic(6, 7, 2, 3, actor_hidden=(8,), critic_hidden=(8,))
+    ppo = MultiCriticPPO(model, (2., 1., 1.), 4, 5, 'cpu', group_names=('a', 'b', 'c'))
+    obs, critic = torch.randn(4, 6), torch.randn(4, 7)
+    for _ in range(5):
+        ppo.act(obs, critic)
+        rewards = torch.stack((torch.randn(4), torch.randn(4) * .1, torch.zeros(4)), -1)   # group c never varies
+        ppo.process(rewards, torch.zeros(4, dtype=torch.bool), torch.zeros(4, dtype=torch.bool), obs, critic, critic)
+    ppo.returns(critic)
+    diagnostics = ppo.diagnostics
+    assert set(diagnostics) == {f'{kind}/{group}' for kind in ('advantage_raw_std', 'advantage_share', 'explained_variance')
+                                for group in 'abc'}
+    assert all(np.isfinite(value) for value in diagnostics.values())
+    assert diagnostics['advantage_share/a'] > diagnostics['advantage_share/b']
 
 
 def test_convex_hull_intersection_with_clearance():

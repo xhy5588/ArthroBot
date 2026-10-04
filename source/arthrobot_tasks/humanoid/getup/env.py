@@ -8,7 +8,10 @@
   runner shrinks ``action_bound`` over training. 2 wheel actions are torques.
   Every motor is capped at 13 N m and 74 rpm.
 - Rewards come in five groups (task, regularization, style, target, safety), one
-  critic each; see :mod:`.ppo`.
+  critic each; see :mod:`.ppo`. Near standing, the target group can reward the
+  ending pose as HoST does (``arm_pose_width``, ``leg_pose_width``): a wide Gaussian
+  of the squared joint errors from the standing policy's pose, so it still pulls
+  when the arms are far away.
 - An optional upward pull on the torso (``pull_force_n``, set by the runner) helps
   early learning and is removed during training.
 - Domain randomization: friction, restitution, link masses, torso payload and COM
@@ -100,6 +103,11 @@ class GetupEnvCfg(DirectRLEnvCfg):
     posture_l1_weight = 0.             # near standing: per rad of |q - nominal|, legs
     arm_posture_l1_weight = 0.         # near standing: per rad of |q - nominal|, arms
     posture_progress_weight = 0.       # near standing: per rad of arm error removed
+    posture_weight = 1.                # near standing: exp(-2 x squared error of all 18 limbs); too narrow to pull far
+    # Ending pose as in HoST's target_upper_dof_pos (0 = off): near standing, reward
+    # exp(-width x sum of squared joint errors from the standing pose). HoST uses 0.1 for the upper body.
+    arm_pose_width = 0.                # 12 arm joints
+    leg_pose_width = 0.                # 6 leg joints (they stay closer to the pose, so a narrower Gaussian)
     ready_tolerance = .25              # rad; the standing policy's command range around nominal
     standing_fraction = 0.             # share of training resets from the 'standing' bank family
     # Stand-up schedule (0 = off): height and uprightness are rewarded for following a smooth
@@ -168,6 +176,8 @@ class GetupEnv(DirectRLEnv):
         self.families = tuple(bank['families'])
         self.training_rows = len(self.bank_root)
         self.forced_pose = None            # evaluation: a bank index per environment
+        self.arm_ready_time = torch.zeros(n, device=device)
+        self.best_arm_ready = torch.zeros(n, device=device)
         # Curriculum values, set by the runner.
         self.action_bound = 1.
         self.pull_force_n = 0.
@@ -345,6 +355,19 @@ class GetupEnv(DirectRLEnv):
         upright = -self.robot.data.projected_gravity_b[:, 2] > math.cos(math.radians(self.cfg.standing_tilt_deg))
         return (self.torso_height() > self.cfg.standing_height_m) & upright & wheels_down.all(-1)
 
+    def ending_pose_terms(self, deviation: torch.Tensor, near: torch.Tensor) -> dict[str, torch.Tensor]:
+        """HoST-style ending-pose rewards near standing; only the enabled ones are returned."""
+        terms = {}
+        if self.cfg.arm_pose_width > 0:
+            terms['arm_pose'] = near * torch.exp(-self.cfg.arm_pose_width * deviation[:, :12].square().sum(-1))
+        if self.cfg.leg_pose_width > 0:
+            terms['leg_pose'] = near * torch.exp(-self.cfg.leg_pose_width * deviation[:, 12:].square().sum(-1))
+        return terms
+
+    def arm_error_max(self) -> torch.Tensor:
+        """[N] largest distance of an arm joint from the standing pose, rad."""
+        return (self.robot.data.joint_pos[:, self.motor_ids[:12]] - self.nominal[:12]).abs().amax(-1)
+
     def ready_pose(self) -> torch.Tensor:
         """All 18 limb joints within the standing policy's command range of the nominal pose."""
         limb_angles = self.robot.data.joint_pos[:, self.motor_ids[:LIMBS]]
@@ -412,14 +435,15 @@ class GetupEnv(DirectRLEnv):
             target=dict(
                 lin_vel=near * torch.exp(-linear_speed / .05),
                 ang_vel=near * torch.exp(-angular_speed / .25),
-                posture=near * torch.exp(-posture / .5),
+                posture=cfg.posture_weight * near * torch.exp(-posture / .5),
                 # The exponential is ~0 far from nominal; this keeps pulling back.
                 posture_l1=-near * (cfg.posture_l1_weight * deviation[:, 12:].sum(-1) + cfg.arm_posture_l1_weight * arm_error),
                 posture_progress=cfg.posture_progress_weight * progress,
                 ready=near * self.ready_pose().float(),
                 orientation=near * torch.exp(-gravity[:, :2].square().sum(-1) / .02),
                 height=near * torch.exp(-(height - self.standing_height).square() / .002),
-                wheel_contact=near * wheels_down.all(-1).float()),
+                wheel_contact=near * wheels_down.all(-1).float(),
+                **self.ending_pose_terms(deviation, near)),
             safety=dict(
                 self_contact_new=-cfg.self_contact_weight * self.new_touch.float().sum(-1),
                 self_contact_inherited=-cfg.inherited_contact_weight * self.inherited_touch.float().sum(-1),
@@ -477,6 +501,9 @@ class GetupEnv(DirectRLEnv):
         ready = standing & self.ready_pose()
         self.ready_time = torch.where(ready, self.ready_time + dt, torch.zeros_like(self.ready_time))
         self.best_ready = torch.maximum(self.best_ready, self.ready_time)
+        arms_ready = standing & (self.arm_error_max() < self.cfg.ready_tolerance)
+        self.arm_ready_time = torch.where(arms_ready, self.arm_ready_time + dt, torch.zeros_like(self.arm_ready_time))
+        self.best_arm_ready = torch.maximum(self.best_arm_ready, self.arm_ready_time)
         limb_speed = self.robot.data.joint_vel[:, self.motor_ids[:LIMBS]].abs()
         self.peak_limb_speed = torch.where(actuated, torch.maximum(self.peak_limb_speed, limb_speed.amax(-1)),
                                            self.peak_limb_speed)
@@ -547,7 +574,8 @@ class GetupEnv(DirectRLEnv):
                        self.self_contact_standing_time, self.body_self_contact_time, self.inherited, self.new_touch,
                        self.inherited_touch, self.new_contact_time, self.inherited_time, self.ready_time,
                        self.best_ready, self.peak_limb_speed, self.over_speed_time, self.saturated_time,
-                       self.peak_torso_rate, self.previous_arm_error, self.previous_near, *self.term_sums.values()):
+                       self.peak_torso_rate, self.previous_arm_error, self.previous_near, self.arm_ready_time,
+                       self.best_arm_ready, *self.term_sums.values()):
             buffer[env_ids] = 0.
         self.targets[env_ids] = start_limb_angles
         self.previous_targets[env_ids] = start_limb_angles
@@ -569,19 +597,21 @@ class GetupEnv(DirectRLEnv):
                             self.self_contact_time[done], self.self_contact_standing_time[done],
                             self.new_contact_time[done], self.inherited_time[done], self.best_ready[done],
                             self.peak_limb_speed[done], self.over_speed_time[done], self.saturated_time[done],
-                            self.peak_torso_rate[done], *self.group_sums[done].T), -1).cpu().tolist()
+                            self.peak_torso_rate[done], self.best_arm_ready[done], self.arm_error_max()[done],
+                            *self.group_sums[done].T), -1).cpu().tolist()
         body_times = self.body_self_contact_time[done].cpu().tolist()
         names = self.contacts.body_names
         for row, per_body in zip(rows, body_times):
             (env, family, pose, seconds, best, final, height, first, touch, touch_standing, new_touch, inherited,
-             ready, speed, over_speed, saturated, torso_rate, *group_returns) = row
+             ready, speed, over_speed, saturated, torso_rate, arm_ready, final_arm_error, *group_returns) = row
             self.completed.append(dict(
                 env=int(env), family=self.families[int(family)], pose=int(pose), seconds=seconds,
                 best_standing_s=best, final_standing_s=final, max_height_m=height,
                 first_standing_s=None if math.isnan(first) else first, stood_2s=best >= 2., standing_at_end=final >= 1.,
                 self_contact_s=touch, self_contact_standing_s=touch_standing, new_contact_s=new_touch,
                 inherited_contact_s=inherited, best_ready_s=ready, peak_limb_speed=speed, over_speed_s=over_speed,
-                saturated_s=saturated, peak_torso_rate=torso_rate,
+                saturated_s=saturated, peak_torso_rate=torso_rate, best_arm_ready_s=arm_ready,
+                final_arm_error_rad=final_arm_error,
                 self_contact_bodies={names[i]: time for i, time in enumerate(per_body) if time > 0},
                 pull_force_n=self.pull_force_n, action_bound=self.action_bound,
                 returns=dict(zip(REWARD_GROUPS, group_returns))))
