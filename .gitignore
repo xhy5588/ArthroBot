@@ -2,6 +2,8 @@
 /build/
 # Training runs, TensorBoard logs and recorded videos
 /logs/
+# Hydra run configs written by scripts/rsl_rl/ when overrides are given
+/outputs/
 # Python
 __pycache__/
 *.pyc

@@ -1,12 +1,15 @@
 """Record one get-up rollout per lying family to an MP4 (needs rendering; see the README's RTX note).
 
-Five robots, one per start family, each from the first held-out pose of its family,
-so clips are comparable across checkpoints. Evaluation conditions: deterministic
-policy, no pull force, no randomization or observation noise, the checkpoint's
-action bound. Each robot has its own tracking camera; a sixth tile shows the run
-information. Optionally adds an animated GIF and per-family scalars to TensorBoard.
+One robot per start family (all five by default), each from the first held-out pose
+of its family, so clips are comparable across checkpoints. Evaluation conditions:
+deterministic policy, no pull force, no randomization or observation noise, the
+checkpoint's action bound. Each robot has its own tracking camera. By default every
+tile shows live measurements and an extra tile shows the run information; --plain
+keeps only the family names (for presentation clips). Optionally adds an animated
+GIF and per-family scalars to TensorBoard.
 
     python scripts/humanoid/record_getup.py
+    python scripts/humanoid/record_getup.py --plain --families front --tile-width 800 --tile-height 450 --seconds 7
     python scripts/humanoid/record_getup.py --checkpoint logs/humanoid_getup/<run>/model_6000.pt --tensorboard-dir logs/humanoid_getup/<run>/rollouts
 """
 import argparse
@@ -25,6 +28,11 @@ parser.add_argument('--checkpoint', type=Path, default=CHECKPOINT)
 parser.add_argument('--pose-bank', type=Path, default=POSE_BANK_DIR / 'held_out_seed1042_32.json')
 parser.add_argument('--output-dir', type=Path, default=paths.BUILD_DIR / 'humanoid_training/getup_videos')
 parser.add_argument('--tensorboard-dir', type=Path, help='Also write an animated GIF and scalars here.')
+parser.add_argument('--families', nargs='+', help='Start families to record (default: every family in the bank).')
+parser.add_argument('--plain', action='store_true', help='Only family names on the tiles; no measurements.')
+parser.add_argument('--seconds', type=float, help='Clip length (default: the whole 10 s episode).')
+parser.add_argument('--camera-offset', type=float, nargs=3, default=(1.25, -1.25, .7), metavar=('X', 'Y', 'Z'),
+                    help='Camera position relative to the torso, m.')
 parser.add_argument('--tile-width', type=int, default=400)
 parser.add_argument('--tile-height', type=int, default=300)
 parser.add_argument('--fps', type=int, default=15)
@@ -40,7 +48,7 @@ from arthrobot.sim.rtx_compat import enable  # noqa: E402
 enable()
 app = AppLauncher(args).app
 
-CAMERA_OFFSET_M = (1.25, -1.25, .7)
+GRID_COLUMNS = 3
 
 
 def short_body_name(name: str) -> str:
@@ -63,13 +71,18 @@ def main():
     action_bound = action_bound_at(update, settings['final_action_bound'], settings['bound_iterations'])
     bank = json.loads(args.pose_bank.read_text())
     families = [family for family in bank['families'] if any(pose['family'] == family for pose in bank['poses'])]
+    if args.families:
+        unknown = sorted(set(args.families) - set(families))
+        if unknown:
+            raise ValueError(f'Families {unknown} are not in {args.pose_bank.name}; available: {families}')
+        families = list(args.families)
     first_pose = [next(i for i, pose in enumerate(bank['poses']) if pose['family'] == family) for family in families]
     width, height = args.tile_width, args.tile_height
     usd_path, _ = ensure_getup_usd(with_visuals=True)
 
     cfg = GetupEnvCfg()
     cfg.asset_path, cfg.pose_bank = str(usd_path), str(args.pose_bank)
-    cfg.scene.num_envs, cfg.scene.env_spacing, cfg.sim.device = len(families), 6., args.device
+    cfg.scene.num_envs, cfg.scene.env_spacing, cfg.sim.device = len(families), 20., args.device  # no other robot in view
     cfg.randomize, cfg.obs_noise = False, False
     camera_cfg = TiledCameraCfg(prim_path='/World/envs/env_.*/Camera', data_types=['rgb'], width=width, height=height,
                                 offset=TiledCameraCfg.OffsetCfg(pos=(1.8, -1.8, 1.), rot=(1., 0., 0., 0.),
@@ -86,7 +99,7 @@ def main():
     env.action_bound, env.pull_force_n = action_bound, 0.
     env.forced_pose = torch.tensor(first_pose, device=env.device)
     obs, _ = env.reset()
-    camera_offset = torch.tensor(CAMERA_OFFSET_M, device=env.device)
+    camera_offset = torch.tensor(args.camera_offset, device=env.device)
 
     def aim_cameras():
         target = env.robot.data.root_pos_w.clone()
@@ -105,6 +118,27 @@ def main():
         cv2.putText(tile, f'{touch}  (total {contact_s:.2f} s)', (8, height - 8), cv2.FONT_HERSHEY_SIMPLEX, .45,
                     (255, 80, 80) if contacts else (160, 160, 160), 1, cv2.LINE_AA)
         return tile
+
+    def plain_tile(image, family):
+        tile = np.ascontiguousarray(image)
+        cv2.putText(tile, family, (12, 30), cv2.FONT_HERSHEY_SIMPLEX, .8, (0, 0, 0), 4, cv2.LINE_AA)
+        cv2.putText(tile, family, (12, 30), cv2.FONT_HERSHEY_SIMPLEX, .8, (255, 255, 255), 2, cv2.LINE_AA)
+        return tile
+
+    def caption_tile():
+        tile = np.full((height, width, 3), 24, np.uint8)
+        lines = ['ArthroBot humanoid, v0', f'get-up policy, update {update:,}', 'deterministic, no assistance',
+                 'held-out start poses']
+        for row, line in enumerate(lines):
+            cv2.putText(tile, line, (16, height // 2 - 45 + 32 * row), cv2.FONT_HERSHEY_SIMPLEX, .65, (230, 230, 230),
+                        1, cv2.LINE_AA)
+        return tile
+
+    def grid(tiles):
+        columns = min(GRID_COLUMNS, len(tiles))
+        tiles = tiles + [np.full_like(tiles[0], 24)] * (-len(tiles) % columns)
+        rows = [np.hstack(tiles[start:start + columns]) for start in range(0, len(tiles), columns)]
+        return np.vstack(rows)
 
     def info_tile(time_s):
         tile = np.full((height, width, 3), 24, np.uint8)
@@ -125,8 +159,11 @@ def main():
     best_standing = torch.zeros(env.num_envs, device=env.device)
     # The timeout fires when the episode counter reaches max - 1; stopping one step earlier
     # keeps the final frames (a reset would show the start pose again).
+    steps = int(env.max_episode_length) - 2
+    if args.seconds:
+        steps = min(steps, round(args.seconds / env.step_dt))
     with torch.no_grad():
-        for step in range(int(env.max_episode_length) - 2):
+        for step in range(steps):
             aim_cameras()
             obs, *_ = env.step(model.mean(obs['policy']).clamp(-1., 1.))
             max_height = torch.maximum(max_height, env.torso_height())
@@ -134,6 +171,10 @@ def main():
             if step % frame_stride:
                 continue
             images = env.camera.data.output['rgb'][..., :3].cpu().numpy().astype(np.uint8)
+            if args.plain:
+                tiles = [plain_tile(images[i], family) for i, family in enumerate(families)]
+                frames.append(grid(tiles + [caption_tile()] if len(tiles) > 1 else tiles))
+                continue
             tilt = torch.rad2deg(torch.acos((-env.robot.data.projected_gravity_b[:, 2]).clamp(-1., 1.))).tolist()
             touching = ((env.self_contact_forces() > env.cfg.self_contact_n) & env.actuated()[:, None]).cpu()
             contacts = [[short_body_name(env.contacts.body_names[j]) for j in torch.nonzero(row).flatten().tolist()]
@@ -141,8 +182,7 @@ def main():
             tiles = [robot_tile(images[i], family, float(env.torso_height()[i]), tilt[i], float(env.standing_time[i]),
                                 contacts[i], float(env.self_contact_time[i])) for i, family in enumerate(families)]
             tiles.append(info_tile((step + 1) * env.step_dt))
-            tiles += [np.zeros_like(tiles[0])] * (6 - len(tiles))
-            frames.append(np.vstack((np.hstack(tiles[:3]), np.hstack(tiles[3:6]))))
+            frames.append(grid(tiles))
 
     summary = dict(update=update, checkpoint=str(args.checkpoint), action_bound=action_bound, pull_force_n=0.,
                    training_pull_force_n=state['pull_force'], frames=len(frames), fps=args.fps,
@@ -151,9 +191,11 @@ def main():
                                           self_contact_s=float(env.self_contact_time[i]))
                              for i, family in enumerate(families)})
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    video = args.output_dir / f'update_{update:06d}.mp4'
+    name = f'update_{update:06d}' + ('_' + '_'.join(args.families) if args.families else '') + (
+        '_plain' if args.plain else '')
+    video = args.output_dir / f'{name}.mp4'
     imageio.mimwrite(video, frames, fps=args.fps, codec='libx264', quality=7, macro_block_size=8)
-    (args.output_dir / f'update_{update:06d}.json').write_text(json.dumps(summary, indent=2) + '\n')
+    (args.output_dir / f'{name}.json').write_text(json.dumps(summary, indent=2) + '\n')
     if args.tensorboard_dir:
         write_tensorboard(frames, summary, update)
     print('GETUP_ROLLOUT: ' + json.dumps(dict(video=str(video), **{key: value for key, value in summary.items()
