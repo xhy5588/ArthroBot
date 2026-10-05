@@ -16,28 +16,27 @@ First stage (defaults):
 Pipeline check:
     python scripts/humanoid/train_getup.py --smoke --num-envs 64 --iterations 2 --eval-interval 2
 
-The included checkpoint (update 25,500) was trained in stages; the final stage
-resumed from update 21,500 with the safety rewards, the stand-up schedule and the
-standing starts switched on (every value is in checkpoints/humanoid_getup/settings.json):
-    python scripts/humanoid/train_getup.py --checkpoint <run>/model_21500.pt --num-envs 4096 \\
-        --iterations 4000 --entropy 0.01 --gamma 0.997 --min-std 0.2 --strength-min 0.85 --strength-max 1.0 \\
-        --safety-weight 1.5 --self-contact-weight 3 --inherited-contact-weight 1 --joint-speed-weight 1 \\
-        --torque-weight 0.25 --torso-rate-weight 1 --posture-l1-weight 0.3 --arm-posture-l1-weight 1 \\
-        --posture-progress-weight 1 --height-schedule 3 --standing-fraction 0.25 \\
+The included checkpoint (update 10,000) was trained from scratch in two stages, with the
+HoST-style ending pose (near standing, a wide Gaussian of the arm and leg errors from the
+standing policy's pose) instead of the narrow all-limb posture term, which pays nothing
+when the arms are far away. Every value is in checkpoints/humanoid_getup/settings.json.
+    # Stage 1, updates 0-5,700
+    python scripts/humanoid/train_getup.py --num-envs 4096 --iterations 5700 --entropy 0.005 --max-std 0.6 \\
+        --min-std 0.2 --gamma 0.997 --strength-min 0.85 --strength-max 1.0 --safety-weight 1.5 \\
+        --self-contact-weight 3 --inherited-contact-weight 1 --joint-speed-weight 1 --torque-weight 0.25 \\
+        --torso-rate-weight 1 --posture-weight 0 --arm-pose-width 0.1 --leg-pose-width 1 --height-schedule 3 \\
+        --episode-length 12 --standing-fraction 0.25 \\
         --standing-bank source/arthrobot_tasks/humanoid/getup/data/pose_banks/standing_seed7_800.json
-
-Ending pose as in HoST (--arm-pose-width 0.1, --leg-pose-width 1): near standing, the
-target group rewards being close to the standing policy's pose with a wide Gaussian, so
-the arms are pulled down even from far away; the best checkpoint then ranks robots that
-also hold their arms in that pose. The included policy used the narrow all-limb posture
-term instead (--posture-weight 1), which pays nothing when the arms are far away.
+    # Stage 2, updates 5,700-12,000: the arms rested on their joint stops, so add a per-joint linear
+    # arm pull, a lower arm-noise cap and a joint-stop penalty near standing (the included policy is update 10,000)
+    python scripts/humanoid/train_getup.py --checkpoint <run>/model_5700.pt --iterations 6300 <stage 1 flags> \\
+        --arm-pose-linear-weight 1 --arm-max-std 0.25 --standing-joint-limit-weight 10
 """
 import argparse
 import csv
 from datetime import datetime
 import hashlib
 import json
-import math
 import os
 from pathlib import Path
 import shutil
@@ -97,6 +96,11 @@ parser.add_argument('--strength-max', type=float, default=1.1)
 parser.add_argument('--posture-weight', type=float, default=1., help='Narrow all-limb posture term near standing.')
 parser.add_argument('--arm-pose-width', type=float, default=0., help='HoST-style arm ending pose (0: off; HoST uses 0.1).')
 parser.add_argument('--leg-pose-width', type=float, default=0., help='HoST-style leg ending pose (0: off).')
+parser.add_argument('--arm-pose-linear-weight', type=float, default=0.,
+                    help='Near standing: per-joint linear pull of the arms to the standing pose (works from the stops).')
+parser.add_argument('--standing-joint-limit-weight', type=float, default=0.,
+                    help='Safety group, near standing: per rad beyond 90%% of a joint range.')
+parser.add_argument('--arm-max-std', type=float, help='Separate action-noise cap for the 12 arm actions.')
 parser.add_argument('--episode-length', type=float, default=10., help='Episode length, s.')
 parser.add_argument('--smoke', action='store_true', help='Pipeline check: log every update; run folder suffix _smoke.')
 from isaaclab.app import AppLauncher  # noqa: E402
@@ -129,7 +133,8 @@ def environment_settings() -> dict:
                 posture_progress_weight=args.posture_progress_weight, height_schedule_s=args.height_schedule,
                 strength_range=(args.strength_min, args.strength_max), standing_fraction=args.standing_fraction,
                 posture_weight=args.posture_weight, arm_pose_width=args.arm_pose_width,
-                leg_pose_width=args.leg_pose_width)
+                leg_pose_width=args.leg_pose_width, arm_pose_linear_weight=args.arm_pose_linear_weight,
+                standing_joint_limit_weight=args.standing_joint_limit_weight)
 
 
 def main():
@@ -167,7 +172,8 @@ def main():
     group_weights = (2.5, .1, 1., 1., args.safety_weight)
     model = ActorCritic(cfg.observation_space, cfg.state_space, cfg.action_space, len(REWARD_GROUPS)).to(env.device)
     ppo = MultiCriticPPO(model, group_weights, env.num_envs, args.steps_per_env, env.device, entropy=args.entropy,
-                         max_std=args.max_std, min_std=args.min_std, gamma=args.gamma, group_names=REWARD_GROUPS)
+                         max_std=args.max_std, min_std=args.min_std, gamma=args.gamma, group_names=REWARD_GROUPS,
+                         arm_max_std=args.arm_max_std)
     state = dict(iteration=0, pull_force=args.pull_force, pull_changes=[], best=None)
     if args.checkpoint:
         saved = torch.load(args.checkpoint, map_location=env.device, weights_only=False)
@@ -177,9 +183,8 @@ def main():
             # A new run folder tracks its own best checkpoint; the source run keeps its best.pt.
             state['resumed_best'], state['best'] = state['best'], None
 
-    with torch.no_grad():
-        # Apply the std bounds before the first rollout so the first update's KL is not inflated by the clamp.
-        model.log_std.clamp_(math.log(args.min_std), math.log(args.max_std))
+    # Apply the std bounds before the first rollout so the first update's KL is not inflated by the clamp.
+    ppo.clamp_std()
 
     settings = dict(task='humanoid_getup', started=stamp, num_envs=env.num_envs, steps_per_env=args.steps_per_env,
                     iterations=args.iterations, observation=cfg.observation_space, critic=cfg.state_space,
@@ -188,6 +193,7 @@ def main():
                     pull_gate=f'held-out evaluation stood_2s >= {args.pull_eval_success}',
                     final_action_bound=args.final_action_bound, bound_iterations=args.bound_iterations,
                     entropy=args.entropy, gamma=args.gamma, min_action_std=args.min_std, max_action_std=args.max_std,
+                    arm_max_action_std=args.arm_max_std,
                     **environment_settings(), episode_length_s=args.episode_length,
                     self_contact_threshold_n=cfg.self_contact_n,
                     ready_tolerance=cfg.ready_tolerance, standing_bank=str(args.standing_bank),

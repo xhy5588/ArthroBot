@@ -70,7 +70,8 @@ class ActorCritic(nn.Module):
 class MultiCriticPPO:
     def __init__(self, model: ActorCritic, group_weights, num_envs: int, steps: int, device, gamma=.99, lam=.95,
                  clip=.2, epochs=5, minibatches=4, lr=1e-3, desired_kl=.01, entropy=.005, value_coef=1.,
-                 max_grad_norm=1., smooth_policy=.1, smooth_value=.1, min_std=.05, max_std=1., group_names=None):
+                 max_grad_norm=1., smooth_policy=.1, smooth_value=.1, min_std=.05, max_std=1., group_names=None,
+                 arm_max_std=None):
         self.model, self.device = model, device
         self.weights = torch.tensor(group_weights, device=device)
         self.group_names = tuple(group_names or (f'group_{i}' for i in range(len(group_weights))))
@@ -82,7 +83,11 @@ class MultiCriticPPO:
         # Actions are clipped to [-1, 1], so a larger std only saturates commands
         # (an early run drifted to std 2.1 under the entropy bonus).
         self.min_std, self.max_std = min_std, max_std
-        self.log_std_bounds = (float(torch.log(torch.tensor(min_std))), float(torch.log(torch.tensor(max_std))))
+        # Per-action std bounds; the 12 arm actions can have a lower cap (arm_max_std).
+        self.log_std_low = torch.full_like(model.log_std, float(torch.log(torch.tensor(min_std))))
+        self.log_std_high = torch.full_like(model.log_std, float(torch.log(torch.tensor(max_std))))
+        if arm_max_std is not None:
+            self.log_std_high[:12] = float(torch.log(torch.tensor(arm_max_std)))
         self.optimizer = torch.optim.Adam(model.parameters(), lr=lr)
         self.num_envs, self.steps = num_envs, steps
         self.storage = None
@@ -208,8 +213,7 @@ class MultiCriticPPO:
                 loss.backward()
                 nn.utils.clip_grad_norm_(self.model.parameters(), self.max_grad_norm)
                 self.optimizer.step()
-                with torch.no_grad():
-                    self.model.log_std.clamp_(*self.log_std_bounds)
+                self.clamp_std()
                 updates += 1
                 for key, value_ in (('value', value_loss), ('surrogate', surrogate), ('entropy', entropy), ('kl', kl),
                                     ('clip_fraction', ((ratio - 1).abs() > self.clip).float().mean()),
@@ -225,6 +229,11 @@ class MultiCriticPPO:
         stats['learning_rate'] = self.lr
         stats['action_std'] = float(self.model.log_std.exp().mean())
         return stats
+
+    @torch.no_grad()
+    def clamp_std(self) -> None:
+        """Keep every action's noise std within its bounds."""
+        self.model.log_std.copy_(torch.maximum(torch.minimum(self.model.log_std, self.log_std_high), self.log_std_low))
 
     def state_dict(self) -> dict:
         return dict(model=self.model.state_dict(), optimizer=self.optimizer.state_dict(), lr=self.lr)

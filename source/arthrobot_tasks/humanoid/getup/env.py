@@ -108,6 +108,11 @@ class GetupEnvCfg(DirectRLEnvCfg):
     # exp(-width x sum of squared joint errors from the standing pose). HoST uses 0.1 for the upper body.
     arm_pose_width = 0.                # 12 arm joints
     leg_pose_width = 0.                # 6 leg joints (they stay closer to the pose, so a narrower Gaussian)
+    # Near standing: per arm joint, reward rising linearly from 0 (pi rad off) to 1 (at the pose), averaged.
+    # Unlike the Gaussians it still pulls when every arm joint rests on a joint stop.
+    arm_pose_linear_weight = 0.
+    # Safety group, near standing: per rad beyond 90% of a limb joint's range, so the arms cannot rest on the stops.
+    standing_joint_limit_weight = 0.
     ready_tolerance = .25              # rad; the standing policy's command range around nominal
     standing_fraction = 0.             # share of training resets from the 'standing' bank family
     # Stand-up schedule (0 = off): height and uprightness are rewarded for following a smooth
@@ -231,7 +236,8 @@ class GetupEnv(DirectRLEnv):
         self.previous_arm_error = torch.zeros(n, device=device)
         self.previous_near = torch.zeros(n, dtype=torch.bool, device=device)
         self.group_sums = torch.zeros(n, len(REWARD_GROUPS), device=device)
-        self.term_sums = {}
+        self.term_names = None             # reward-term names, in the column order of term_sums
+        self.term_sums = None              # [N, terms] per-episode sums of every reward term (for logging)
         self.terminal_critic_obs = torch.zeros(n, cfg.state_space, device=device)
         self.completed = []
         self.control_stats = torch.zeros(3, device=device)   # torque saturation, torque RMS, action change
@@ -362,6 +368,9 @@ class GetupEnv(DirectRLEnv):
             terms['arm_pose'] = near * torch.exp(-self.cfg.arm_pose_width * deviation[:, :12].square().sum(-1))
         if self.cfg.leg_pose_width > 0:
             terms['leg_pose'] = near * torch.exp(-self.cfg.leg_pose_width * deviation[:, 12:].square().sum(-1))
+        if self.cfg.arm_pose_linear_weight > 0:
+            closeness = (1. - deviation[:, :12] / math.pi).clamp(min=0.)
+            terms['arm_pose_linear'] = self.cfg.arm_pose_linear_weight * near * closeness.mean(-1)
         return terms
 
     def arm_error_max(self) -> torch.Tensor:
@@ -450,7 +459,9 @@ class GetupEnv(DirectRLEnv):
                 joint_speed=-cfg.joint_speed_weight * (
                     velocities[:, :LIMBS].abs() - cfg.joint_speed_soft * MAX_SPEED).clamp(min=0.).sum(-1),
                 torque=-cfg.torque_weight * (self.torque[:, :LIMBS].abs() - cfg.torque_soft_nm).clamp(min=0.).sum(-1),
-                torso_rate=-cfg.torso_rate_weight * (data.root_ang_vel_b.norm(dim=-1) - cfg.torso_rate_soft).clamp(min=0.)))
+                torso_rate=-cfg.torso_rate_weight * (data.root_ang_vel_b.norm(dim=-1) - cfg.torso_rate_soft).clamp(min=0.),
+                **({'joint_limits': -cfg.standing_joint_limit_weight * near * limit_violation}
+                   if cfg.standing_joint_limit_weight > 0 else {})))
 
     def update_contacts(self) -> torch.Tensor:
         """Split self-contact into contact left over from the passive settle and new contact."""
@@ -473,11 +484,12 @@ class GetupEnv(DirectRLEnv):
         actuated = self.actuated().float()
         groups = torch.stack([sum(terms[group].values()) for group in REWARD_GROUPS], -1) * actuated[:, None] * self.step_dt
         self.group_sums += groups
-        for group, values in terms.items():
-            for name, value in values.items():
-                key = f'{group}/{name}'
-                self.term_sums.setdefault(key, torch.zeros(self.num_envs, device=self.device))
-                self.term_sums[key] += value * actuated * self.step_dt
+        # All reward terms in one tensor: one GPU operation per step instead of one per term (logging only).
+        if self.term_names is None:
+            self.term_names = [f'{group}/{name}' for group, values in terms.items() for name in values]
+            self.term_sums = torch.zeros(self.num_envs, len(self.term_names), device=self.device)
+        values = torch.stack([value for group in terms.values() for value in group.values()], -1)
+        self.term_sums += values * (actuated * self.step_dt)[:, None]
         self.extras['reward_groups'] = groups
         self.previous_joint_vel[:] = self.robot.data.joint_vel[:, self.motor_ids]
         self._update_statistics(touching)
@@ -513,7 +525,8 @@ class GetupEnv(DirectRLEnv):
         torso_rate = self.robot.data.root_ang_vel_b.norm(dim=-1)
         self.peak_torso_rate = torch.where(actuated, torch.maximum(self.peak_torso_rate, torso_rate), self.peak_torso_rate)
         first = standing & torch.isnan(self.first_standing_s)
-        self.first_standing_s[first] = (self.episode_length_buf[first] - self.unactuated_env[first]).float() * dt
+        self.first_standing_s = torch.where(first, (self.episode_length_buf - self.unactuated_env).float() * dt,
+                                            self.first_standing_s)
         self.control_stats += torch.stack(((self.torque.abs() >= .99 * self.cfg.torque_limit).float().mean(),
                                            self.torque.square().mean().sqrt(),
                                            (self.actions - self.previous_actions).square().mean()))
@@ -575,7 +588,7 @@ class GetupEnv(DirectRLEnv):
                        self.inherited_touch, self.new_contact_time, self.inherited_time, self.ready_time,
                        self.best_ready, self.peak_limb_speed, self.over_speed_time, self.saturated_time,
                        self.peak_torso_rate, self.previous_arm_error, self.previous_near, self.arm_ready_time,
-                       self.best_arm_ready, *self.term_sums.values()):
+                       self.best_arm_ready, *([self.term_sums] if self.term_sums is not None else [])):
             buffer[env_ids] = 0.
         self.targets[env_ids] = start_limb_angles
         self.previous_targets[env_ids] = start_limb_angles
@@ -598,8 +611,11 @@ class GetupEnv(DirectRLEnv):
                             self.new_contact_time[done], self.inherited_time[done], self.best_ready[done],
                             self.peak_limb_speed[done], self.over_speed_time[done], self.saturated_time[done],
                             self.peak_torso_rate[done], self.best_arm_ready[done], self.arm_error_max()[done],
-                            *self.group_sums[done].T), -1).cpu().tolist()
-        body_times = self.body_self_contact_time[done].cpu().tolist()
+                            *self.group_sums[done].T), -1)
+        # One transfer to the CPU for the episode rows and the per-body contact times.
+        columns = rows.shape[1]
+        packed = torch.cat((rows, self.body_self_contact_time[done]), -1).cpu().tolist()
+        rows, body_times = [row[:columns] for row in packed], [row[columns:] for row in packed]
         names = self.contacts.body_names
         for row, per_body in zip(rows, body_times):
             (env, family, pose, seconds, best, final, height, first, touch, touch_standing, new_touch, inherited,
@@ -616,5 +632,6 @@ class GetupEnv(DirectRLEnv):
                 pull_force_n=self.pull_force_n, action_bound=self.action_bound,
                 returns=dict(zip(REWARD_GROUPS, group_returns))))
         self.completed = self.completed[-4096:]
-        self.extras['log'] = {f'Reward/{key}': float(values[done].mean()) / self.max_episode_length_s
-                              for key, values in self.term_sums.items()}
+        if self.term_sums is not None:
+            means = (self.term_sums[done].mean(0) / self.max_episode_length_s).cpu().tolist()
+            self.extras['log'] = {f'Reward/{name}': mean for name, mean in zip(self.term_names, means)}
