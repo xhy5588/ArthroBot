@@ -14,12 +14,13 @@ import torch
 from arthrobot_tasks.humanoid.getup.ppo import ActorCritic
 from arthrobot_tasks.humanoid.standing.policy import CHECKPOINT as STANDING_CHECKPOINT
 
-CHECKPOINT = STANDING_CHECKPOINT.parents[1] / 'humanoid_getup/model_25500.pt'
+CHECKPOINT = STANDING_CHECKPOINT.parents[1] / 'humanoid_getup/model_10000.pt'
 # GetupEnvCfg fields a training run records in its settings, under the same names.
 RECORDED_CFG_FIELDS = ('self_contact_weight', 'inherited_contact_weight', 'joint_speed_weight', 'joint_speed_soft',
                        'torque_weight', 'torque_soft_nm', 'torso_rate_weight', 'torso_rate_soft', 'posture_l1_weight',
                        'arm_posture_l1_weight', 'posture_progress_weight', 'ready_tolerance', 'height_schedule_s',
-                       'strength_range', 'posture_weight', 'arm_pose_width', 'leg_pose_width')
+                       'strength_range', 'posture_weight', 'arm_pose_width', 'leg_pose_width',
+                       'arm_pose_linear_weight', 'standing_joint_limit_weight')
 
 
 def apply_run_settings(cfg, settings: dict) -> None:
