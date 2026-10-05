@@ -172,7 +172,7 @@ def main():
         tile = np.full((height, width, 3), 24, np.uint8)
         lines = ['ArthroBot humanoid, v0', f'get-up policy, update {update:,}']
         if args.handover:
-            lines.append(f'-> standing policy after {args.stand_hold:g} s standing')
+            lines.append(f'-> standing policy after {args.stand_hold:g} s up')
         lines += ['deterministic, no assistance', 'held-out start poses']
         for row, line in enumerate(lines):
             cv2.putText(tile, line, (16, height // 2 - 16 * len(lines) + 32 * row), cv2.FONT_HERSHEY_SIMPLEX, .65,

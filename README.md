@@ -16,16 +16,16 @@ versions.
 
 | Arm: reaching random targets (green sphere) | Humanoid: getting up, then turning to the standing pose |
 | --- | --- |
-| <img src="docs/media/arm_reach.gif" width="100%" alt="The arm moves its gripper to a new green target every 2 seconds"> | <img src="docs/media/humanoid_getup_to_standing.gif" width="100%" alt="The humanoid gets up from lying face down, then the standing policy lowers its arms to the standing pose and it balances on its wheels"> |
-| a new target every 2 s; median error 2.2 mm | gets up from lying face down with no assistance; after 1 s of standing the standing policy takes over, brings the arms down to the standing pose and balances |
+| <img src="docs/media/arm_reach.gif" width="100%" alt="The arm moves its gripper to a new green target every 2 seconds"> | <img src="docs/media/humanoid_getup_to_standing.gif" width="100%" alt="The humanoid gets up from lying face down, the standing policy takes over and it balances on its wheels"> |
+| a new target every 2 s; median error 2.2 mm | gets up from lying face down in about 1.6 s with no assistance; after 1 s of standing the standing policy takes over and balances |
 
-<img src="docs/media/humanoid_getup_starts.gif" width="100%" alt="Five humanoids get up from lying on the back, front, left side, right side and a random orientation">
+<img src="docs/media/humanoid_getup_starts.gif" width="100%" alt="Five humanoids get up from lying on the back, front, left side, right side and a random orientation, then the standing policy takes over">
 
-The get-up policy alone from held-out poses of all five start families: lying on the
-back, front, left or right side, or in a random orientation. All five stand up; the
-left-side start takes a few seconds longer. On its own the get-up policy keeps the
-arms raised. The hand-over to the standing policy (above) brings them down, but so far
-it works in only about half of the cases
+The whole sequence from held-out poses of all five start families: lying on the back,
+front, left or right side, or in a random orientation. Each robot gets up with the
+get-up policy, and after 1 s of standing the standing policy takes over (its label
+turns green). In tests, 99.4% stay up through the hand-over. The arms end down at the
+sides, not yet exactly in the standing pose
 (see [the hand-over](docs/humanoid.md#hand-over-from-get-up-to-standing)).
 
 | Stage | What exists | Details |
@@ -41,8 +41,8 @@ it works in only about half of the cases
 | --- | --- | --- |
 | Arm reach | median TCP error 2.2 mm; 97.7% of targets within 1 cm | `checkpoints/arm_reach/model_550.pt` |
 | Humanoid standing | 32/32 deterministic 15 s trials stay upright (largest tilt 1.6°) | `checkpoints/humanoid_standing/model_4999.pt` |
-| Humanoid get-up | stands up from 99.7% of held-out lying poses with no assistance, in 2.1 s | `checkpoints/humanoid_getup/model_25500.pt` |
-| Hand-over (get-up → standing) | **open problem:** 45–58% stay up; the arms do not return to the standing pose | — |
+| Humanoid get-up | stands up from 99.4% of held-out lying poses with no assistance, in 1.6 s | `checkpoints/humanoid_getup/model_10000.pt` |
+| Hand-over (get-up → standing) | 99.4% stay up after switching to the standing policy | both humanoid checkpoints |
 
 Nothing has been run on the real robots yet.
 

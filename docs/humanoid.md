@@ -8,8 +8,8 @@ Code: `source/arthrobot_assets/humanoid/` (model), `source/arthrobot_tasks/human
 | Task | Status (simulation only) | Included policy |
 | --- | --- | --- |
 | [Standing](#standing) | all 32 deterministic 15 s trials pass | `checkpoints/humanoid_standing/model_4999.pt` |
-| [Get-up from lying](#get-up-from-lying) | stands up from 99.7% of held-out lying poses with no assistance | `checkpoints/humanoid_getup/model_25500.pt` |
-| [Hand-over](#hand-over-from-get-up-to-standing) | only 45–58% stay up after switching to the standing policy | both of the above |
+| [Get-up from lying](#get-up-from-lying) | stands up from 99.4% of held-out lying poses with no assistance, in 1.6 s | `checkpoints/humanoid_getup/model_10000.pt` |
+| [Hand-over](#hand-over-from-get-up-to-standing) | 99.4% stay up after switching to the standing policy | both of the above |
 
 Nothing has been tried on the real robot yet.
 
@@ -125,7 +125,7 @@ simulated self-collision.
   Arms are the standing pose ± 0.6 rad and legs ± 0.4 rad, clipped to the limits.
   The bank holds 2,000 training poses and 160 held-out poses. Self-colliding poses
   are rejected.
-- **Episode:** 10 s. The first 0.6 s is passive, so the robot settles first.
+- **Episode:** 12 s. The first 0.6 s is passive, so the robot settles first.
 - **Actions:** limb target = current angle + bound × action, clipped to the limits.
   The bound decays from 1.0 to 0.25 rad over 3,000 updates. The wheel actions are
   torques.
@@ -139,8 +139,16 @@ simulated self-collision.
   | task | 2.5 | torso height, uprightness, standing |
   | regularization | 0.1 | joint acceleration, action rate and smoothness, torque, power, soft joint and speed limits |
   | style | 1 | hip abduction, shanks pointing down, wheel track, low tilt rate, no body–floor contact near standing |
-  | target | 1 | near standing: stillness, standing posture, level torso, height, both wheels down |
-  | safety | 1.5 (final stage) | new self-contact, contact left from settling, limb speed above 50%, torque above 9 N m, torso rotation rate |
+  | target | 1 | near standing: stillness, level torso, height, both wheels down, and the ending pose (below) |
+  | safety | 1.5 | new self-contact, contact left from settling, limb speed above 50%, torque above 9 N m, torso rotation rate; near standing, arm joints resting on their stops |
+
+- **Ending pose** (target group, near standing): the robot should end in the standing
+  policy's pose, so that policy can take over.
+  - Arms, HoST-style: `exp(−0.1 × Σ error²)` over the 12 arm joints.
+  - Legs: `exp(−1.0 × Σ error²)` over the 6 leg joints.
+  - Arms, per joint: a linear term, so the pull doesn't vanish when every arm joint is far away.
+  - While getting up the arms are free; these terms only count once the robot is near
+    standing (torso above 0.465 m, tilt below 30°).
 
 - **Curricula:**
   - an upward pull on the torso starts at 65 N (about half the body weight) and
@@ -149,44 +157,57 @@ simulated self-collision.
 - **Randomization:**
   - at startup: friction, restitution, link masses ±10%, torso payload −0.3 to
     +0.8 kg, torso COM ±2 cm;
-  - at each reset: PD gains ±15%, motor strength 90–110% (85–100% in the final
-    stage), joint offsets ±0.03 rad, action delay 0–25 ms;
+  - at each reset: PD gains ±15%, motor strength 85–100%, joint offsets ±0.03 rad,
+    action delay 0–25 ms;
   - observation noise.
 - **PPO:** multi-critic PPO (`getup/ppo.py`; rsl_rl has no multi-critic version).
   Advantages are computed and normalized per group. The actor is [512, 256, 128] and
   the critic [512, 256] with one head per group. It adds L2C2-style smoothness and
   bootstraps timeouts from the true final state.
+  - Entropy bonus 0.005.
+  - Action noise std between 0.2 and 0.6; the arm actions are capped at 0.25.
 
 **Success** means standing (torso above 0.46 m, tilt below 15°, both wheels down) for
 2 s in a row. Evaluations are deterministic, with no pull force and no observation
 noise.
 
-**Result** (`model_25500.pt`, 4,096 robots cycling the 160 held-out poses):
+**Result** (`model_10000.pt`):
 
-| Measure | Value |
-| --- | ---: |
-| stood up and held 2 s | 99.7% |
-| time to stand (after the motors switch on) | 2.06 s |
-| stood up without creating self-contact | 58.5% |
-| peak limb joint speed | 5.5 rad/s (motor max 7.75) |
-| ready pose: every limb within ±0.25 rad of the standing pose for 1 s | 0% |
+| Measure | 4,096 robots cycling the 160 held-out poses (training evaluation) | `evaluate_getup.py` (320 robots, seed 7) |
+| --- | ---: | ---: |
+| stood up and held 2 s | 99.8% | 99.4% |
+| time to stand (after the motors switch on) | 1.62 s | 1.60 s |
+| stood up without creating self-contact | 25.9% | 25.9% |
+| largest arm-joint distance from the standing pose at the end | 1.64 rad | 1.64 rad |
+| peak limb joint speed | 5.4 rad/s (motor max 7.75) | 5.3 rad/s |
 
-On a fresh bank that was never used in training (`fresh_seed2042_32.json`), the
-update-21,500 checkpoint scored the same as on the held-out bank (99.75% vs 99.62%).
-
-**How it was trained.** Each stage resumed from a checkpoint of the previous one:
+**How it was trained.** It was trained from scratch, in two stages. The docstring of
+`train_getup.py` gives both commands, and every setting is recorded in
+`checkpoints/humanoid_getup/settings.json`.
 
 | Updates | Change | Outcome |
 | --- | --- | --- |
-| 0–10,000 | 1,024 robots; pull force gated on training success | pull force stuck at 65 N; 32% success |
-| 9,500–15,500 | 4,096 robots; pull force gated on held-out evaluation | pull force 65 → 0 N; 99.5% success with no assistance |
-| 13,250–16,250 | self-contact penalty | clean success 48% → 57% |
-| 16,250–21,500 | safety group, ready-pose and posture terms, entropy 0.01, std floor 0.2 | ready pose still 0% |
-| 21,500–25,500 | 3 s stand-up schedule, γ 0.997, 25% upright starts | time to stand 1.4 → 2.1 s; hand-over 26% → 57.5% |
+| 0–5,700 | ending pose (HoST-style arm and leg terms), entropy 0.005, noise cap 0.6, 12 s episodes | gets up with the assist; pull force 65 → 52 N by update 5,250; but 10 of 12 arm joints rest on their joint stops |
+| 5,700–12,000 | per-joint linear arm term, arm-noise cap 0.25, joint-stop penalty near standing | pull force 52 → 0 N by update 6,500; 99% stand up from 6,750; hand-over 92–100% from 7,500 |
 
-The defaults of `train_getup.py` are the first stage. Its docstring gives the
-final-stage command; every setting is also recorded in
-`checkpoints/humanoid_getup/settings.json`.
+Update 10,000 has the best full hand-over test and the smallest arm error, so it is
+the included policy. The per-update history is in
+`checkpoints/humanoid_getup/evaluation_history.json`.
+
+**Why the arms used to stay raised.** The previous included policy (update 25,500 of
+an earlier training line) stood up just as reliably. But it ended with its arms over
+its head, and only 45–58% survived the hand-over. Three things caused it:
+1. **Its posture reward was too narrow.** It was `exp(−2 × Σ error²)` over all 18 limb
+   joints, which pays nothing when the arms are far away. HoST's is `exp(−0.1 × Σ error²)`
+   over the upper body only.
+2. **The arms random-walk into the joint stops.** Arm actions move the target relative
+   to the current angle, and arm noise stayed high (0.5–0.8) because the arms barely
+   affect the reward. So the arms wander until they rest on a stop.
+3. **Even the HoST-style term is flat from the stops.** With 10 joints there, the sum of
+   squared errors is about 55 rad², and `exp(−0.1 × 55) ≈ 0.004`.
+
+The per-joint linear term, the lower arm-noise cap and the joint-stop penalty fixed
+this. The arms now hang down at the sides.
 
 ```bash
 python scripts/humanoid/train_getup.py --num-envs 4096                    # train (headless); logs/humanoid_getup/
@@ -200,9 +221,7 @@ python scripts/humanoid/make_pose_banks.py lying --seed 42 --per-family 400
 python scripts/humanoid/sweep_joint_limits.py
 ```
 
-`evaluate_getup.py` (320 robots, seed 7) reproduces the original code exactly: 100%
-stood, 2.06 s to stand. Stop training with SIGTERM: the trainer finishes the current
-update, saves and exits.
+Stop training with SIGTERM: the trainer finishes the current update, saves and exits.
 
 **Demo clips** (`docs/media/humanoid_*.gif`). They need the RTX workaround (see the
 README) and are written to `build/humanoid_training/getup_videos/`. Each rendered robot
@@ -210,18 +229,15 @@ needs about 1.5 GB of host memory, so record one family per run:
 
 ```bash
 V=build/humanoid_training/getup_videos
-python scripts/humanoid/record_getup.py --plain                                  # get-up, all five start families, 10 s
-python scripts/make_gif.py $V/update_025500_plain.mp4 docs/media/humanoid_getup_starts.gif --width 840 --fps 10 --colors 64
-
-# Get-up, then hand-over to the standing policy: 4 starts of one family, 14 s
-python scripts/humanoid/record_getup.py --plain --handover --families front --poses-per-family 4 --seconds 14 \
-    --tile-width 800 --tile-height 450
-python scripts/make_gif.py $V/update_025500_front_x4_handover_plain.mp4 docs/media/humanoid_getup_to_standing.gif \
-    --crop 800:450:800:0 --width 600 --fps 10 --duration 10 --colors 64   # robot "front 2"
+# Get-up, then the hand-over to the standing policy: all five start families, 10 s
+python scripts/humanoid/record_getup.py --plain --handover --seconds 10
+python scripts/make_gif.py $V/update_010000_handover_plain.mp4 docs/media/humanoid_getup_starts.gif \
+    --width 840 --fps 10 --colors 64
+# The same for one robot, close up
+python scripts/humanoid/record_getup.py --plain --handover --families front --tile-width 800 --tile-height 450 --seconds 10
+python scripts/make_gif.py $V/update_010000_front_handover_plain.mp4 docs/media/humanoid_getup_to_standing.gif \
+    --width 600 --fps 10 --colors 64
 ```
-
-`humanoid_handover_successes.gif` combines four such runs (480×270 tiles): robot 2 of
-`back` and `front`, and robot 1 of `left` and `right`.
 
 **Joint-limit provenance.** The committed `joint_limits.json` was swept from an
 earlier standing pose, which differs from the current one by up to 2.6° (left hip).
@@ -236,40 +252,22 @@ robots switch to the standing policy and odd-numbered robots keep the get-up pol
 The standing policy's heading and COM inputs are measured from the moment it takes
 over.
 
-| 640 robots, 30 s, seed 7 | Stayed standing |
-| --- | ---: |
-| switched to the standing policy (318 robots) | 45.3% |
-| kept the get-up policy (320 robots) | 100% |
+| 640 robots, 30 s, seed 7 | Stayed standing | Average largest tilt |
+| --- | ---: | ---: |
+| switched to the standing policy (319 robots) | 99.4% | 6.6° |
+| kept the get-up policy (320 robots) | 100% | 3.1° |
 
-(An earlier 20 s test with 320 robots gave 57.5%.)
+With the previous get-up policy only 45–58% survived the hand-over, because its arms
+were raised over its head (see "Why the arms used to stay raised" above).
+`record_getup.py --handover` records the whole sequence; see the demo clips above.
 
-When it works, the standing policy swings the arms down to the standing pose within
-about a second and then balances. `record_getup.py --handover` records it. A run with
-4 held-out starts per family, without randomization, gave these results:
-
-- **11 of 20 robots** ended in the standing pose and stayed upright;
-- by family: left 4/4, right 3/4, back 2/4, front 2/4, random orientation 0/4.
-
-One success from each of the first four families:
-
-<img src="media/humanoid_handover_successes.gif" width="100%" alt="Four humanoids from back, front, left and right starts stand in the standing pose under the standing policy">
-
-**Main open problem.** The get-up policy never brings its arms back to the standing
-pose. At hand-over every robot has an arm outside the ±0.25 rad range the standing
-policy uses: on average the left shoulder is 2.87 rad from it and the right shoulder
-1.15 rad. In 59% of robots one gripper is in front and one behind. Posture rewards of
-up to 1.0 per radian did not change this, although the straight path back to the
-standing pose is free of collisions.
-
-Next steps, not yet tried:
-
-1. A scripted arm return before the hand-over: blend the arm targets to the standing
-   pose over about 1 s. This can be tested in `handoff.py` without training.
-2. Make the standing policy tolerant of any arm pose by fine-tuning it from upright
-   starts with random arms (`standing_seed7_800.json`).
-3. Halve the get-up entropy bonus (0.01 → 0.005). Action noise ended at 0.75, and with
-   noise on the robots almost never stand calmly during training, so the policy
-   rarely sees the ready pose.
+**What is still missing.** The arms end down at the sides, but not exactly in the
+standing pose: the largest arm-joint error is about 1.6 rad, so every robot still has an
+arm joint outside the standing policy's ±0.25 rad range at hand-over. The standing
+policy copes with that. Next steps:
+1. bring the arms fully into the standing pose;
+2. test pushes and starts outside the training poses;
+3. move on to locomotion from the standing pose.
 
 The tilt-recovery experiments that came before the get-up task are summarized in
 [history/](history/README.md).

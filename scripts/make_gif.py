@@ -1,6 +1,6 @@
 """Convert an MP4 into a palette-optimized GIF for the README (uses imageio's bundled ffmpeg).
 
-    python scripts/make_gif.py build/humanoid_training/getup_videos/update_025500_front_plain.mp4 docs/media/humanoid_getup.gif
+    python scripts/make_gif.py build/humanoid_training/getup_videos/update_010000_front_handover_plain.mp4 docs/media/humanoid_getup.gif
     python scripts/make_gif.py clip.mp4 clip.gif --width 640 --fps 12 --start 1 --duration 6 --crop 900:506:200:120
 """
 import argparse
