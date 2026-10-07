@@ -28,10 +28,18 @@ turns green). In tests, 99.4% stay up through the hand-over. The arms end down a
 sides, not yet exactly in the standing pose
 (see [the hand-over](docs/humanoid.md#hand-over-from-get-up-to-standing)).
 
+**Arm motion around obstacles** ([docs/arm_planning.md](docs/arm_planning.md)):
+
+| Old planner vs cuRobo, table and wall | Very loose printed arm: plan only vs measured-sag compensation |
+| --- | --- |
+| <img src="docs/media/arm_planning_vs_joint_interpolation.gif" width="100%" alt="Left: the arm swings sideways into the wall and gets stuck; right: cuRobo lifts the gripper over the wall onto the target"> | <img src="docs/media/arm_planning_loose_arm.gif" width="100%" alt="A loose arm sags below its target and touches; with sag compensation it reaches the target within millimetres"> |
+| IK with smooth joint moves swings the arm through the wall (red frame = contact); cuRobo plans over it | a loose arm (2° play per joint) sags into the table; pre-compensating the measured sag keeps it clear |
+
 | Stage | What exists | Details |
 | --- | --- | --- |
 | Module | CAD of one joint module; motor and part data shared by all robots | [module](source/arthrobot_assets/module/README.md) |
 | Arm | 6 modules + DM4310 rack-and-pinion gripper; validated model; TCP reach policy | [docs/arm.md](docs/arm.md) |
+| Arm motion | gripper pose IK; collision-free planning with cuRobo; loose printed-arm test model | [docs/arm_planning.md](docs/arm_planning.md) |
 | Humanoid | 20 modules, two arms, two wheel legs; standing, get-up from lying, hand-over | [docs/humanoid.md](docs/humanoid.md) |
 | Next | describe new morphologies from a module library; later, an arm that assembles modules into a humanoid for different tasks | — |
 
@@ -43,6 +51,7 @@ sides, not yet exactly in the standing pose
 | Humanoid standing | 32/32 deterministic 15 s trials stay upright (largest tilt 1.6°) | `checkpoints/humanoid_standing/model_4999.pt` |
 | Humanoid get-up | stands up from 99.4% of held-out lying poses with no assistance, in 1.6 s | `checkpoints/humanoid_getup/model_10000.pt` |
 | Hand-over (get-up → standing) | 99.4% stay up after switching to the standing policy | both humanoid checkpoints |
+| Arm planning around a table and a wall | cuRobo: no contacts, 0.02 mm at the target (44 of 48 targets; the rest are impossible). IK with joint interpolation: 86% of moves touch the wall or table, 169 mm off | no training |
 
 Nothing has been run on the real robots yet.
 
@@ -58,12 +67,13 @@ source/
     humanoid/             wheel-legged humanoid (build.py, training_model.py, nominal_pose.py, usd.py)
   arthrobot_tasks/        Isaac Lab tasks
     arm_reach/            manager-based reach task, registered as ArthroBot-Arm-Reach-v0
+    arm_planning/         arm kinematics and IK, cuRobo planning model, loose-arm test model
     humanoid/standing/    hybrid standing (rsl_rl PPO)
     humanoid/getup/       get-up from lying (multi-critic PPO), hand-over, pose banks, joint limits
 scripts/                  entry points: arm/, humanoid/, rsl_rl/ (official Isaac Lab train.py / play.py)
 checkpoints/              the three trained policies above
 tests/                    model and policy-logic tests (no simulator needed)
-docs/                     arm.md, humanoid.md, history/ (earlier experiments)
+docs/                     arm.md, arm_planning.md, humanoid.md, history/ (earlier experiments)
 build/, logs/             generated models and training runs (git-ignored)
 ```
 
@@ -90,6 +100,9 @@ Requirements: Linux and an NVIDIA GPU, with:
    python -m pytest tests          # about 20 s; builds both robot models
    ```
 
+**Collision-free planning (optional).** The arm planning scripts need NVIDIA cuRobo
+v2; see [docs/arm_planning.md](docs/arm_planning.md#collision-free-planning-with-curobo).
+
 **Rendering on NVIDIA 595.x drivers.** The GUI, cameras and videos need a Vulkan
 workaround for Isaac Sim 5.1
 ([isaac-sim/IsaacSim#568](https://github.com/isaac-sim/IsaacSim/issues/568)). Build it
@@ -109,6 +122,8 @@ python scripts/arm/view.py --gripper-demo                                # arm a
 python scripts/rsl_rl/train.py --task ArthroBot-Arm-Reach-v0 --headless --num_envs 1024
 python scripts/rsl_rl/play.py --task ArthroBot-Arm-Reach-Play-v0 --checkpoint checkpoints/arm_reach/model_550.pt
 python scripts/arm/evaluate.py                                           # reach accuracy of a checkpoint
+python scripts/arm/build_curobo_robot.py                                 # cuRobo model of the arm (needs cuRobo)
+python scripts/arm/plan_trajectories.py && python scripts/arm/run_plans.py   # plan around a wall, replay in physics
 
 # Humanoid
 python scripts/humanoid/view.py                                          # suspended motor test rig
@@ -136,6 +151,7 @@ message, because the part grouping must be reviewed in `build.py` first.
   contains its `train.py`, `play.py` and `cli_args.py`; the only change is one import
   that registers the ArthroBot tasks. Its license is in `scripts/rsl_rl/LICENSE`.
 - [RSL-RL](https://github.com/leggedrobotics/rsl_rl) for PPO.
+- NVIDIA [cuRobo](https://github.com/NVlabs/curobo) (Apache-2.0) for collision-free arm planning.
 - [HoST](https://arxiv.org/abs/2502.08378) (Huang et al., 2025), which the get-up task is adapted from.
 - Seeed Studio [reBot-DevArm](https://github.com/Seeed-Projects/reBot-DevArm), the
   reference for the DM4310 gripper transmission.
