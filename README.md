@@ -10,7 +10,7 @@ ArthroBot grew out of, and remains part of, Chen's modular robot work
 only the ArthroBot line and runs on the official Isaac Lab.
 
 <p align="center">
-  <img src="docs/media/humanoid_photo.jpg" width="420" alt="The ArthroBot wheel-legged humanoid: black and blue motor modules joined by carbon-fiber rods, two arms (one ending in a parallel gripper) and two wheeled legs">
+  <img src="docs/media/humanoid_photo.jpg" width="420" alt="The ArthroBot wheel-legged humanoid: black motor modules joined by carbon-fiber rods, two arms ending in parallel grippers and two wheeled legs">
 </p>
 
 ## Demos (version 0)
