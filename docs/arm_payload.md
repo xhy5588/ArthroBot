@@ -25,6 +25,9 @@ as the rest of the repository. Code: `tools/arm_payload/`.
 
 ## Open it
 
+Online, no install: **https://xhy5588.github.io/ArthroBot/** (about 15 MB; it then works
+offline). To build it from a checkout:
+
 ```bash
 python tools/arm_payload/build_payload_viewer.py    # a few seconds; builds the arm model if needed
 xdg-open tools/arm_payload/workspace_payload/payload_workspace.html
@@ -84,6 +87,9 @@ rounded down, so a shown value always passes the check.
 - **Self-collision** in the included map used the original cuRobo sphere model.
   Regenerating the map (`map_payload_workspace.py`, cuRobo and a GPU needed, about
   5 minutes) uses ArthroBot's own sphere model (`scripts/arm/build_curobo_robot.py`).
+
+The online page is the `gh-pages` branch: rebuild on `main` and copy the generated files
+listed in that branch's README to update it.
 
 ## Checks
 

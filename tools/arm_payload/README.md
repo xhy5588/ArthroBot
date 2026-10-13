@@ -1,8 +1,9 @@
 # Arm payload calculator
 
 A static payload calculator for the ArthroBot arm: for any posture, how much the
-gripper can hold and which motor limits it. What it shows, why it matters, and how
-the numbers are computed: [docs/arm_payload.md](../../docs/arm_payload.md).
+gripper can hold and which motor limits it. Try it online at
+https://xhy5588.github.io/ArthroBot/. What it shows, why it matters, and how the
+numbers are computed: [docs/arm_payload.md](../../docs/arm_payload.md).
 
 Run from the repository root with any Python that has NumPy, SciPy, trimesh,
 Matplotlib and the ArthroBot packages (Isaac Sim does not need to run):

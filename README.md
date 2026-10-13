@@ -62,8 +62,11 @@ Nothing has been run on the real robots yet.
 
 ## Arm payload calculator
 
-<img src="docs/media/arm_payload_calculator.png" width="100%" alt="The arm payload calculator: controls on the left, the arm in the middle with a static payload limit of 1.745 kg limited by joint 2, and the six motor torques on the right">
+<a href="https://xhy5588.github.io/ArthroBot/"><img src="docs/media/arm_payload_calculator.png" width="100%" alt="The arm payload calculator: controls on the left, the arm in the middle with a static payload limit of 1.745 kg limited by joint 2, and the six motor torques on the right"></a>
 
+**[Try it in your browser](https://xhy5588.github.io/ArthroBot/)** (no install; about 15 MB).
+
+Part of the design workflow: before building or training, check what a design can hold.
 How much can the gripper hold, and which motor gives out first? The arm's limit is the
 gravity torque on its 13 N·m motors, and it changes with every posture: the arm holds
 1.745 kg with all joints at zero but 0.487 kg stretched out, with the shoulder (joint 2)
@@ -71,6 +74,8 @@ limiting both. This offline page answers it for any posture you drag the arm int
 maps where in space it can hold 0–2 kg (67 million sampled postures), and previews
 other rod lengths and arm designs, from the same arm model as the rest of the
 repository. Details: [docs/arm_payload.md](docs/arm_payload.md).
+
+To build it yourself from this checkout:
 
 ```bash
 python tools/arm_payload/build_payload_viewer.py
