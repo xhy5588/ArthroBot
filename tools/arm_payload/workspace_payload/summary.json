@@ -1,0 +1,426 @@
+{
+  "samples": 67108864,
+  "seed": 20261007,
+  "voxel_size_m": 0.025,
+  "joint_limits_deg": [
+    -180,
+    180
+  ],
+  "torque_limits_nm": [
+    13.0,
+    13.0,
+    13.0,
+    13.0,
+    13.0,
+    13.0
+  ],
+  "moving_mass_kg": 3.297495604765386,
+  "fixed_base_mass_kg": 0.5275043952346239,
+  "coordinates": "Upright mount frame: origin at base bottom, +Z up; horizontal radius from base axis.",
+  "payload": "Point mass at the existing between-jaw TCP; gripper geometry held open.",
+  "method": "Scrambled Sobol joint sampling; best static payload among sampled poses per Cartesian cell.",
+  "source_sha256": {
+    "usd_mg5010/arm_rebot.urdf": "af619b428612170a33c418103084945dcb85b034b7624931e523e88eb5d2ffb5",
+    "planning/arm_rebot_curobo.yml": "e1274be96de753fbaa68eaecade0478eb52d3e244c56d4f1faf05be3a2edbd9c",
+    "planning/arm_rebot_planning.urdf": "9f0b17ef6bb4d0086850db622233e14b1bec2ec6348a0000ca05ff58cf99b5f2",
+    "training/mount.py": "2e6e3566a6ad099d7b1241807839c13ede7aaf152d8f498c60474f9e1c46929b",
+    "estimate_payload.py": "f4a1517ee4d81582f80899bc6490726756453d4b71f181ada90ab108a3adede4",
+    "map_payload_workspace.py": "eed150b6ff7168eae5978d666919267be690eef575bdd109992efcdf5bf28664"
+  },
+  "limitations": [
+    "No external obstacles, floor or table; negative Z requires an elevated mount.",
+    "Approximate sphere self-collision model with a 5 mm sphere buffer; not exact mesh collision.",
+    "Best found at a sampled point inside each cell, not a guaranteed optimum at the cell center.",
+    "A pose existing does not prove a continuous collision-free path from the current arm pose.",
+    "Static gravity only: no acceleration, structural strength, grip-slip, thermal or cable-limit certification.",
+    "MG5010 torque/mass settings with existing MG4010 placeholder CAD geometry.",
+    "Object geometry is unspecified and is not included in collision checks."
+  ],
+  "validation": {
+    "energy_gradient": "passed",
+    "known_collision_cases": [
+      false,
+      true,
+      true,
+      true,
+      true
+    ],
+    "max_fk_difference_m": 2.4966731035083133e-07,
+    "any_orientation": {
+      "retained_poses": 77066,
+      "max_torque_limit_ratio": 1.0000000000000002,
+      "max_stored_position_error_m": 3.8202596252850186e-08,
+      "collision_flags": 0
+    },
+    "downward_15deg": {
+      "retained_poses": 29047,
+      "max_torque_limit_ratio": 1.0000000000000002,
+      "max_stored_position_error_m": 2.9621538677330406e-08,
+      "collision_flags": 0
+    }
+  },
+  "progress": [
+    {
+      "samples": 8388608,
+      "seconds": 33.53,
+      "cells": {
+        "any_orientation": {
+          "0.0": 75413,
+          "0.5": 75407,
+          "1.0": 69678,
+          "1.5": 63721,
+          "2.0": 59079
+        },
+        "downward_15deg": {
+          "0.0": 22226,
+          "0.5": 22226,
+          "1.0": 21926,
+          "1.5": 18591,
+          "2.0": 15876
+        }
+      }
+    },
+    {
+      "samples": 16777216,
+      "seconds": 66.66,
+      "cells": {
+        "any_orientation": {
+          "0.0": 76098,
+          "0.5": 76092,
+          "1.0": 70865,
+          "1.5": 65190,
+          "2.0": 60722
+        },
+        "downward_15deg": {
+          "0.0": 25874,
+          "0.5": 25874,
+          "1.0": 25440,
+          "1.5": 21529,
+          "2.0": 18306
+        }
+      }
+    },
+    {
+      "samples": 25165824,
+      "seconds": 100.01,
+      "cells": {
+        "any_orientation": {
+          "0.0": 76439,
+          "0.5": 76435,
+          "1.0": 71437,
+          "1.5": 65839,
+          "2.0": 61473
+        },
+        "downward_15deg": {
+          "0.0": 27222,
+          "0.5": 27222,
+          "1.0": 26736,
+          "1.5": 22740,
+          "2.0": 19418
+        }
+      }
+    },
+    {
+      "samples": 33554432,
+      "seconds": 133.44,
+      "cells": {
+        "any_orientation": {
+          "0.0": 76656,
+          "0.5": 76654,
+          "1.0": 71785,
+          "1.5": 66267,
+          "2.0": 61944
+        },
+        "downward_15deg": {
+          "0.0": 27898,
+          "0.5": 27898,
+          "1.0": 27383,
+          "1.5": 23399,
+          "2.0": 20059
+        }
+      }
+    },
+    {
+      "samples": 41943040,
+      "seconds": 167.45,
+      "cells": {
+        "any_orientation": {
+          "0.0": 76817,
+          "0.5": 76815,
+          "1.0": 72039,
+          "1.5": 66577,
+          "2.0": 62280
+        },
+        "downward_15deg": {
+          "0.0": 28309,
+          "0.5": 28309,
+          "1.0": 27776,
+          "1.5": 23831,
+          "2.0": 20497
+        }
+      }
+    },
+    {
+      "samples": 50331648,
+      "seconds": 201.57,
+      "cells": {
+        "any_orientation": {
+          "0.0": 76928,
+          "0.5": 76928,
+          "1.0": 72206,
+          "1.5": 66798,
+          "2.0": 62549
+        },
+        "downward_15deg": {
+          "0.0": 28607,
+          "0.5": 28607,
+          "1.0": 28064,
+          "1.5": 24148,
+          "2.0": 20856
+        }
+      }
+    },
+    {
+      "samples": 58720256,
+      "seconds": 234.76,
+      "cells": {
+        "any_orientation": {
+          "0.0": 77003,
+          "0.5": 77002,
+          "1.0": 72335,
+          "1.5": 66965,
+          "2.0": 62731
+        },
+        "downward_15deg": {
+          "0.0": 28861,
+          "0.5": 28861,
+          "1.0": 28305,
+          "1.5": 24397,
+          "2.0": 21123
+        }
+      }
+    },
+    {
+      "samples": 67108864,
+      "seconds": 267.83,
+      "cells": {
+        "any_orientation": {
+          "0.0": 77066,
+          "0.5": 77065,
+          "1.0": 72452,
+          "1.5": 67105,
+          "2.0": 62886
+        },
+        "downward_15deg": {
+          "0.0": 29047,
+          "0.5": 29047,
+          "1.0": 28494,
+          "1.5": 24600,
+          "2.0": 21343
+        }
+      }
+    }
+  ],
+  "self_collision_rejected": 34245165,
+  "valid_samples": {
+    "any_orientation": 32863699,
+    "downward_15deg": 740068
+  },
+  "maps": {
+    "any_orientation": {
+      "occupied_cells": 77066,
+      "payload_cells": {
+        "0.0": 77066,
+        "0.5": 77065,
+        "1.0": 72452,
+        "1.5": 67105,
+        "2.0": 62886
+      },
+      "farthest_sampled_horizontal_reach": {
+        "0.0": {
+          "radius_m": 0.6480258277898127,
+          "position_m": [
+            -0.16373409461538582,
+            -0.6269996967648005,
+            0.09935046014737023
+          ],
+          "angles_deg": [
+            31.539851054549217,
+            -179.10122528672218,
+            87.03606616705656,
+            36.69270683079958,
+            72.38503150641918,
+            96.46571528166533
+          ],
+          "capacity_kg": 0.5262541853269748
+        },
+        "0.5": {
+          "radius_m": 0.6480258277898127,
+          "position_m": [
+            -0.16373409461538582,
+            -0.6269996967648005,
+            0.09935046014737023
+          ],
+          "angles_deg": [
+            31.539851054549217,
+            -179.10122528672218,
+            87.03606616705656,
+            36.69270683079958,
+            72.38503150641918,
+            96.46571528166533
+          ],
+          "capacity_kg": 0.5262541853269748
+        },
+        "1.0": {
+          "radius_m": 0.6157472802405668,
+          "position_m": [
+            0.3192153376858649,
+            -0.5265418134486133,
+            0.11445196450271944
+          ],
+          "angles_deg": [
+            53.384823091328144,
+            175.66434122622013,
+            21.82481423020363,
+            -14.034680798649788,
+            78.24897106736898,
+            -38.426875323057175
+          ],
+          "capacity_kg": 1.000007807396202
+        },
+        "1.5": {
+          "radius_m": 0.5875878421470075,
+          "position_m": [
+            0.5849600427923802,
+            0.05550874323305611,
+            0.053865436336502495
+          ],
+          "angles_deg": [
+            108.3735478296876,
+            -164.22556433826685,
+            153.55386972427368,
+            102.36067157238722,
+            63.64814668893814,
+            147.8810915350914
+          ],
+          "capacity_kg": 1.500178328146065
+        },
+        "2.0": {
+          "radius_m": 0.5667594563964375,
+          "position_m": [
+            0.3923853591420835,
+            0.4089621148049334,
+            0.018478522350056533
+          ],
+          "angles_deg": [
+            67.59747684001923,
+            -19.04628273099661,
+            19.96983904391527,
+            -37.27727182209492,
+            79.73046440631151,
+            -162.783186994493
+          ],
+          "capacity_kg": 2.0090611773181584
+        }
+      }
+    },
+    "downward_15deg": {
+      "occupied_cells": 29047,
+      "payload_cells": {
+        "0.0": 29047,
+        "0.5": 29047,
+        "1.0": 28494,
+        "1.5": 24600,
+        "2.0": 21343
+      },
+      "farthest_sampled_horizontal_reach": {
+        "0.0": {
+          "radius_m": 0.4958046691566158,
+          "position_m": [
+            -0.4025808595777926,
+            0.28939751460423246,
+            -0.11215452161335127
+          ],
+          "angles_deg": [
+            133.35126221179962,
+            0.7147698104381561,
+            96.71966750174761,
+            40.473351180553436,
+            145.64361926168203,
+            7.469846494495869
+          ],
+          "capacity_kg": 0.8909091218967935
+        },
+        "0.5": {
+          "radius_m": 0.4958046691566158,
+          "position_m": [
+            -0.4025808595777926,
+            0.28939751460423246,
+            -0.11215452161335127
+          ],
+          "angles_deg": [
+            133.35126221179962,
+            0.7147698104381561,
+            96.71966750174761,
+            40.473351180553436,
+            145.64361926168203,
+            7.469846494495869
+          ],
+          "capacity_kg": 0.8909091218967935
+        },
+        "1.0": {
+          "radius_m": 0.4826554571778334,
+          "position_m": [
+            -0.023122520479998108,
+            -0.48210127503481615,
+            -0.12517632268278886
+          ],
+          "angles_deg": [
+            -100.41623935103416,
+            10.775816291570663,
+            98.42206958681345,
+            64.75920382887125,
+            132.86132253706455,
+            -114.26816079765558
+          ],
+          "capacity_kg": 1.0112053822242077
+        },
+        "1.5": {
+          "radius_m": 0.442566332236101,
+          "position_m": [
+            -0.4139350516572663,
+            0.15659735450642578,
+            -0.04176467294687411
+          ],
+          "angles_deg": [
+            -82.96602755784988,
+            146.58271797001362,
+            74.91780325770378,
+            -16.884896345436573,
+            9.041004739701748,
+            -131.8289604038
+          ],
+          "capacity_kg": 1.5044700657776768
+        },
+        "2.0": {
+          "radius_m": 0.41425941031153635,
+          "position_m": [
+            0.17451981501347041,
+            0.3757042629506962,
+            0.006540426235933233
+          ],
+          "angles_deg": [
+            68.72528035193682,
+            50.68445786833763,
+            104.87708788365126,
+            102.78525654226542,
+            136.4495723694563,
+            151.87084056437016
+          ],
+          "capacity_kg": 2.005484810515867
+        }
+      }
+    }
+  },
+  "elapsed_seconds": 270.24524896312505
+}

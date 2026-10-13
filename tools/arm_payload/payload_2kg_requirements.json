@@ -1,0 +1,231 @@
+{
+  "payload_kg": 2.0,
+  "mount": "joint 1 vertical; fixed base",
+  "poses": {
+    "cad_pose": {
+      "gravity_torques_nm": [
+        9.280500791552208e-06,
+        -13.768686336996401,
+        -9.45559020772777,
+        0.15920656946377038,
+        0.025280821113244523,
+        0.002211837913500783
+      ],
+      "torque_magnitudes_nm": [
+        9.280500791552208e-06,
+        13.768686336996401,
+        9.45559020772777,
+        0.15920656946377038,
+        0.025280821113244523,
+        0.002211837913500783
+      ],
+      "motor_limits_nm": [
+        13.0,
+        13.0,
+        13.0,
+        13.0,
+        13.0,
+        13.0
+      ],
+      "overloaded_joints": [
+        "revolute_2"
+      ],
+      "minimum_continuous_torque_with_20pct_unused_capacity_nm": [
+        1.160062598944026e-05,
+        17.210857921245502,
+        11.819487759659712,
+        0.19900821182971296,
+        0.03160102639155565,
+        0.002764797391875979
+      ],
+      "own_gravity_torque_nm": [
+        1.3732536024382416e-05,
+        -7.728829897183456,
+        -2.968857609533813,
+        0.06420261586204223,
+        0.004947520239066621,
+        0.0017050604503767858
+      ],
+      "payload_lever_m": [
+        2.2691311074567825e-07,
+        0.3078418165042276,
+        0.33061837911284186,
+        0.004842199470016725,
+        0.0010363558039846025,
+        2.5829636244852057e-05
+      ],
+      "payload_center_m": [
+        0.45318960562679383,
+        -0.1549429410505943,
+        -0.009203358789999401
+      ],
+      "angles_deg": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "most_demanding_found": {
+      "gravity_torques_nm": [
+        2.7315494509648127e-05,
+        -22.509894277235052,
+        0.0007690181734941737,
+        0.009089018478259804,
+        0.003914920097866894,
+        -0.0001767553052524906
+      ],
+      "torque_magnitudes_nm": [
+        2.7315494509648127e-05,
+        22.509894277235052,
+        0.0007690181734941737,
+        0.009089018478259804,
+        0.003914920097866894,
+        0.0001767553052524906
+      ],
+      "motor_limits_nm": [
+        13.0,
+        13.0,
+        13.0,
+        13.0,
+        13.0,
+        13.0
+      ],
+      "overloaded_joints": [
+        "revolute_2"
+      ],
+      "minimum_continuous_torque_with_20pct_unused_capacity_nm": [
+        3.414436813706015e-05,
+        28.137367846543814,
+        0.0009612727168677171,
+        0.011361273097824755,
+        0.0048936501223336175,
+        0.00022094413156561327
+      ],
+      "own_gravity_torque_nm": [
+        1.084602805940162e-05,
+        -9.93684491566977,
+        -0.0002733935057710468,
+        0.0029580248476439794,
+        0.0006225763454318252,
+        2.689417554610496e-05
+      ],
+      "payload_lever_m": [
+        8.394223471073652e-07,
+        0.6408282039533783,
+        5.3130055008421024e-05,
+        0.0003124869332627841,
+        0.00016780549196916762,
+        1.0379688114097634e-05
+      ],
+      "payload_center_m": [
+        0.6417749570950773,
+        0.009423272477027988,
+        0.11243665706233816
+      ],
+      "angles_deg": [
+        -27.052143496687556,
+        11.654260601236759,
+        -0.7922208969209277,
+        36.1120409875552,
+        72.67297043862709,
+        166.3505946441024
+      ]
+    }
+  },
+  "notes": [
+    "Stationary point load at existing between-jaw TCP; moving lift adds acceleration/friction and thermal requirements.",
+    "Torque reserve example divides load by 0.8 to leave 20 percent of the rating unused, not a validated dynamic motor specification.",
+    "25 Nm maximum/peak is not a measured continuous rating.",
+    "Mount, gripper grip, PLA structure and motion-path collisions are not rated by this calculation."
+  ],
+  "per_joint_numerical_workspace_search": [
+    {
+      "joint": "revolute_1",
+      "maximum_static_torque_found_nm": 0.00011944874045669174,
+      "rating_with_20_percent_unused_nm": 0.00014931092557086468,
+      "joint_angles_deg": [
+        30.560687547828117,
+        -179.4073423200126,
+        89.1562188930021,
+        36.12322163187034,
+        72.65034837269782,
+        165.57982038353572
+      ],
+      "over_13nm": false
+    },
+    {
+      "joint": "revolute_2",
+      "maximum_static_torque_found_nm": 22.511309667808884,
+      "rating_with_20_percent_unused_nm": 28.139137084761103,
+      "joint_angles_deg": [
+        22.86564118649901,
+        11.013522125231216,
+        -0.7616374027618811,
+        36.128332175012844,
+        72.64771699424497,
+        165.13075033466197
+      ],
+      "over_13nm": true
+    },
+    {
+      "joint": "revolute_3",
+      "maximum_static_torque_found_nm": 13.424710396629429,
+      "rating_with_20_percent_unused_nm": 16.780887995786784,
+      "joint_angles_deg": [
+        -50.73416128042775,
+        0.576488146725338,
+        16.838139894103698,
+        -53.89026600221702,
+        72.66348434905628,
+        165.26083965210918
+      ],
+      "over_13nm": true
+    },
+    {
+      "joint": "revolute_4",
+      "maximum_static_torque_found_nm": 12.792139756403554,
+      "rating_with_20_percent_unused_nm": 15.990174695504441,
+      "joint_angles_deg": [
+        -131.09920105798616,
+        89.98110126109654,
+        88.74010182730048,
+        -54.489281462283095,
+        72.74650086053053,
+        -101.81438880179756
+      ],
+      "over_13nm": false
+    },
+    {
+      "joint": "revolute_5",
+      "maximum_static_torque_found_nm": 5.201409636063419,
+      "rating_with_20_percent_unused_nm": 6.501762045079273,
+      "joint_angles_deg": [
+        102.12683269534186,
+        90.49345758733321,
+        -91.41068237232177,
+        21.574727728280326,
+        -2.6371639586286633,
+        -105.49234020719399
+      ],
+      "over_13nm": false
+    },
+    {
+      "joint": "revolute_6",
+      "maximum_static_torque_found_nm": 0.008493638836530037,
+      "rating_with_20_percent_unused_nm": 0.010617048545662547,
+      "joint_angles_deg": [
+        -112.86334511779292,
+        26.13020861840507,
+        22.721649189479624,
+        -53.20795504556948,
+        32.071889448528424,
+        109.3879914271803
+      ],
+      "over_13nm": false
+    }
+  ],
+  "workspace_search_note": "Each joint maximized separately over +/-180 degrees; poses differ, collision freedom unchecked, not a certified global maximum or a dynamic rating."
+}

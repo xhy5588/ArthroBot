@@ -1,0 +1,118 @@
+/* "How the payload is calculated", in the Draft page style. */
+.method-section { max-width: 1100px; margin: 0 auto; padding: 0 0 24px; color: var(--ink); scroll-margin-top: 24px; }
+.method-heading-row { max-width: 820px; margin: 0 auto 26px; text-align: center; }
+.method-eyebrow { margin: 0 0 6px; color: var(--accent); font-family: var(--sans); font-size: .82rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.method-heading-row h2 { margin: 0 0 10px; font-family: var(--sans); font-size: clamp(1.45rem, 3vw, 1.9rem); font-weight: 500; line-height: 1.25; }
+.method-intro { margin: 0; color: var(--ink-2); font-size: 1.02rem; }
+
+.method-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; }
+.method-step { position: relative; padding: 20px; border: 1px solid var(--line); border-radius: var(--radius); background: #fff; }
+.method-step-number {
+  display: inline-grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  margin-bottom: 12px;
+  border-radius: 50%;
+  color: #fff;
+  background: var(--ink);
+  font-family: var(--sans);
+  font-size: .85rem;
+}
+.method-step h3, .method-reading-card h3 { margin: 0 0 12px; font-family: var(--sans); font-size: 1.15rem; font-weight: 500; line-height: 1.35; }
+.method-step p, .method-reading-card p { margin: 10px 0 0; color: var(--ink-2); font-size: .92rem; line-height: 1.65; }
+.method-step p strong, .method-reading-card p strong { color: var(--ink); font-weight: 600; }
+.method-equation {
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--bg-alt);
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.08rem;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.method-equation sub { font-size: .7em; }
+.method-step .method-reason { margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: .85rem; }
+
+.method-worked {
+  display: grid;
+  grid-template-columns: minmax(270px, .8fr) minmax(0, 1.6fr);
+  margin: 22px 0;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: #fff;
+  box-shadow: 0 1px 2px rgba(16, 24, 40, .04);
+}
+.method-worked-controls { padding: 22px; border-right: 1px solid var(--line); }
+.method-worked-controls h3 { margin: 0 0 10px; font-family: var(--sans); font-size: 1.3rem; font-weight: 500; line-height: 1.25; }
+.method-fixed-note, .method-pose-description { margin: 0 0 18px; color: var(--ink-2); font-size: .88rem; line-height: 1.6; }
+.method-field { display: block; color: var(--ink-2); font-size: .9rem; }
+.method-field select { display: block; margin: 6px 0 10px; }
+.method-pose-description { min-height: 60px; }
+.method-payload-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; color: var(--ink-2); font-size: .9rem; }
+.method-payload-heading output { color: var(--ink); font-family: var(--sans); font-size: 1.35rem; font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.method-slider { margin: 12px 0 8px; }
+.method-load-presets { display: flex; gap: 4px; margin-bottom: 10px; }
+.method-load-presets button { flex: 1; padding: 4px 6px; font-size: .82rem; white-space: nowrap; }
+.method-load-presets button[aria-pressed="true"] { color: #fff; border-color: var(--pill); background: var(--pill); }
+.method-small { margin: 10px 0; color: var(--ink-3); font-size: .8rem; line-height: 1.55; }
+.method-example-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 12px; padding-top: 16px; border-top: 1px solid var(--line); }
+.method-example-summary dt { color: var(--ink-2); font-size: .8rem; line-height: 1.4; }
+.method-example-summary dd { margin: 4px 0 0; font-family: var(--sans); font-size: 1.5rem; font-weight: 700; line-height: 1.25; font-variant-numeric: tabular-nums; }
+.method-status { margin: 12px 0 0; padding: 9px 12px; border: 1px solid var(--line); border-left: 4px solid var(--good); border-radius: 10px; color: var(--ink-2); font-size: .85rem; line-height: 1.55; }
+.method-status[data-pass="false"] { border-color: rgba(196, 78, 82, .4); border-left-color: var(--bad); color: #8e3236; }
+.method-worked-results { min-width: 0; padding: 22px; }
+.method-table-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; margin-bottom: 12px; }
+.method-table-heading h4, .method-substitution h4 { margin: 0; font-family: var(--sans); font-size: .98rem; font-weight: 500; }
+.method-table-heading span { color: var(--ink-3); font-size: .8rem; white-space: nowrap; }
+.method-table-scroll { max-width: 100%; overflow-x: auto; border: 1px solid var(--line); border-radius: 10px; }
+.method-table { width: 100%; min-width: 485px; border-collapse: collapse; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.method-table th, .method-table td { padding: 11px 12px; border-bottom: 1px solid var(--line); text-align: right; font-size: .88rem; }
+.method-table thead th { background: var(--bg-alt); color: var(--ink-2); font-family: var(--sans); font-size: .8rem; font-weight: 500; }
+.method-table th:first-child { text-align: left; }
+.method-table tbody th { color: var(--ink); font-weight: 600; }
+.method-table tbody td { color: var(--ink-2); }
+.method-table tr:last-child th, .method-table tr:last-child td { border-bottom: 0; }
+.method-table tbody tr[data-limiting="true"] { background: #fbf3ed; }
+.method-table tbody tr[data-over="true"] { background: #fbecec; }
+.method-table tbody tr[data-over="true"] td.method-total, .method-table tbody tr[data-over="true"] td.method-remaining { color: var(--bad); font-weight: 600; }
+.method-total { position: relative; padding-bottom: 18px !important; color: var(--ink) !important; font-weight: 600; }
+.method-util-track { position: absolute; left: 12px; right: 12px; bottom: 7px; height: 4px; overflow: hidden; border-radius: 2px; background: #eef0f3; }
+.method-util-fill { display: block; max-width: 100%; height: 100%; border-radius: 2px; background: var(--good); }
+.method-table tr[data-over="true"] .method-util-fill { background: var(--bad); }
+.method-substitution { margin-top: 18px; padding: 16px; border: 1px solid var(--line); border-radius: 10px; background: var(--bg-alt); }
+.method-number-equation { margin: 10px 0 8px; color: var(--ink); font-family: Georgia, "Times New Roman", serif; font-size: clamp(1rem, 1.5vw, 1.25rem); line-height: 1.6; overflow-wrap: anywhere; }
+.method-substitution p:last-child { margin: 0; color: var(--ink-2); font-size: .88rem; line-height: 1.6; }
+.method-pose-details { margin-top: 14px; color: var(--ink-2); font-size: .85rem; }
+.method-pose-details summary { padding: 4px 0; color: var(--ink); font-family: var(--sans); font-weight: 500; cursor: pointer; }
+.method-pose-details p { margin: 6px 0; line-height: 1.6; font-variant-numeric: tabular-nums; }
+
+.method-reading-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; padding-top: 8px; }
+.method-reading-card { padding: 8px 2px; }
+.method-dynamics { display: inline-block; margin: 0; padding: 6px 12px; font-size: 1.05rem; }
+.method-sr-only { position: absolute !important; width: 1px; height: 1px; padding: 0; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0; }
+.method-source-note { margin: 18px 0 0; padding-top: 14px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: .82rem; line-height: 1.7; }
+
+@media (max-width: 1100px) {
+  .method-step { padding: 18px; }
+  .method-worked-controls, .method-worked-results { padding: 18px; }
+  .method-worked { grid-template-columns: minmax(260px, .85fr) minmax(0, 1.4fr); }
+  .method-table th, .method-table td { padding-left: 9px; padding-right: 9px; }
+}
+@media (max-width: 860px) {
+  .method-steps { grid-template-columns: 1fr; }
+  .method-worked { grid-template-columns: 1fr; }
+  .method-worked-controls { border-right: 0; border-bottom: 1px solid var(--line); }
+  .method-pose-description { min-height: 0; }
+  .method-field select, .method-example-summary, .method-load-presets { max-width: 440px; }
+  .method-reading-grid { grid-template-columns: 1fr; gap: 8px; }
+}
+@media (max-width: 520px) {
+  .method-step, .method-worked-controls, .method-worked-results { padding: 16px; }
+  .method-table-heading { display: block; }
+  .method-table-heading span { display: block; margin-top: 4px; }
+  .method-example-summary dd { font-size: 1.3rem; }
+}

@@ -44,6 +44,7 @@ sides, not yet exactly in the standing pose
 | Module | CAD of one joint module; motor and part data shared by all robots | [module](source/arthrobot_assets/module/README.md) |
 | Arm | 6 modules + DM4310 rack-and-pinion gripper; validated model; TCP reach policy | [docs/arm.md](docs/arm.md) |
 | Arm motion | gripper pose IK; collision-free planning with cuRobo; loose printed-arm test model | [docs/arm_planning.md](docs/arm_planning.md) |
+| Arm payload | static payload limit at any posture; reach map by payload; rod-length and redesign studies | [docs/arm_payload.md](docs/arm_payload.md) |
 | Humanoid | 20 modules, two arms, two wheel legs; standing, get-up from lying, hand-over | [docs/humanoid.md](docs/humanoid.md) |
 | Next | describe new morphologies from a module library; later, an arm that assembles modules into a humanoid for different tasks | — |
 
@@ -58,6 +59,23 @@ sides, not yet exactly in the standing pose
 | Arm planning around a table and a wall | cuRobo: no contacts, 0.02 mm at the target (44 of 48 targets; the rest are impossible). IK with joint interpolation: 86% of moves touch the wall or table, 169 mm off | no training |
 
 Nothing has been run on the real robots yet.
+
+## Arm payload calculator
+
+<img src="docs/media/arm_payload_calculator.png" width="100%" alt="The arm payload calculator: controls on the left, the arm in the middle with a static payload limit of 1.745 kg limited by joint 2, and the six motor torques on the right">
+
+How much can the gripper hold, and which motor gives out first? The arm's limit is the
+gravity torque on its 13 N·m motors, and it changes with every posture: the arm holds
+1.745 kg with all joints at zero but 0.487 kg stretched out, with the shoulder (joint 2)
+limiting both. This offline page answers it for any posture you drag the arm into,
+maps where in space it can hold 0–2 kg (67 million sampled postures), and previews
+other rod lengths and arm designs, from the same arm model as the rest of the
+repository. Details: [docs/arm_payload.md](docs/arm_payload.md).
+
+```bash
+python tools/arm_payload/build_payload_viewer.py
+xdg-open tools/arm_payload/workspace_payload/payload_workspace.html
+```
 
 ## Layout
 
@@ -76,8 +94,9 @@ source/
     humanoid/getup/       get-up from lying (multi-critic PPO), hand-over, pose banks, joint limits
 scripts/                  entry points: arm/, humanoid/, rsl_rl/ (official Isaac Lab train.py / play.py)
 checkpoints/              the three trained policies above
+tools/arm_payload/        arm payload calculator: offline page, its builders and the saved reach map
 tests/                    model and policy-logic tests (no simulator needed)
-docs/                     arm.md, arm_planning.md, humanoid.md, history/ (earlier experiments)
+docs/                     arm.md, arm_planning.md, arm_payload.md, humanoid.md, history/ (earlier experiments)
 build/, logs/             generated models and training runs (git-ignored)
 ```
 

@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ArthroBot arm · Reach &amp; payload</title><style>__CSS__
+__METHOD_CSS__
+__ARM_CSS__</style></head>
+<body>
+<a class="skip-link" href="#explorer">Skip to the arm calculator</a>
+<header class="hero" id="top">
+  <div class="container narrow center">
+    <h1 class="title">ArthroBot Arm</h1>
+    <p class="subtitle">Reach and static payload, one posture at a time</p>
+    <p class="hero-lede">Move the gripper or a joint and watch all six motor torques and the payload limit update.</p>
+    <p class="hero-meta"><span id="geometry-summary">150 + 150 mm rods</span> <span class="context-dot" aria-hidden="true">·</span> <span>Fixed base</span> <span class="context-dot" aria-hidden="true">·</span> <span>Six MG5010 motors, 13 N·m each</span></p>
+    <nav class="links" aria-label="Page sections">
+      <button type="button" class="pill" id="open-geometry" aria-haspopup="dialog">Rod lengths</button>
+      <a class="pill" href="#calculation">How it works</a>
+      <a class="pill" href="redesign_options.html">Alternative designs</a>
+      <a class="pill" href="#assumptions">Data &amp; assumptions</a>
+    </nav>
+  </div>
+</header>
+
+<section class="section builder-first" id="builder" aria-labelledby="builder-title">
+  <div class="container wide">
+    <h2 class="sr-only" id="builder-title">Hold a payload</h2>
+    <div class="b-top">
+      <nav class="seg explorer-mode-tabs" aria-label="Workspace view"><button type="button" id="arm-mode" class="seg-btn active" aria-pressed="true">Arm studio</button><button type="button" id="workspace-mode" class="seg-btn" aria-pressed="false">Reach map</button></nav>
+    </div>
+<main id="explorer">
+  __ARM_HTML__
+  <aside class="map-only map-controls" aria-label="Reach map filters">
+    <section class="control-card">
+      <div class="section-heading"><h2>Payload</h2><span class="small-tag">0–2 kg</span></div>
+      <div class="load-readout"><output id="load-value" for="payload">1.00</output><span>kg</span><small>held at the gripper center</small></div>
+      <input id="payload" type="range" min="0" max="2" step="0.01" value="1" aria-label="Payload in kilograms">
+      <div class="presets" id="presets"><button data-load="0">0</button><button data-load="0.5">0.5</button><button data-load="1" class="active">1</button><button data-load="1.5">1.5</button><button data-load="2">2 kg</button></div>
+      <button class="play-button" id="play" aria-pressed="false"><span id="play-icon">▶</span><span id="play-label">Animate payload</span></button>
+      <p class="microcopy">Sweeps the load from 0 to 2 kg and back. The selected arm posture stays fixed.</p>
+      <label class="field-label" for="mode">Gripper direction</label>
+      <select id="mode"><option value="any_orientation">Best found direction</option><option value="downward_15deg">Pointing down · within 15°</option></select>
+      <p class="microcopy direction-note">“Best found” allows a favorable direction at each point; it does not mean every direction works.</p>
+      <label class="field-label" for="height">Height region</label>
+      <select id="height"><option value="all">All heights</option><option value="above">Above mounting plane</option><option value="slice">Horizontal slice</option></select>
+      <div id="slice-controls" hidden><div class="slice-label"><label for="slice">Height slice</label><output id="slice-value">10.0–12.5 cm</output></div><input id="slice" type="range" min="-0.525" max="0.725" step="0.025" value="0.1"><small>2.5 cm thick</small></div>
+      <div class="toggle-row"><label><input type="checkbox" id="rotate"> Slowly rotate view</label><label><input type="checkbox" id="show-arm" checked> Show arm</label></div>
+    </section>
+  </aside>
+  <section class="visual-column map-only" aria-label="Reachable workspace">
+    <div class="metrics">
+      <div><span class="metric-label" id="coverage-label">Cells meeting this load</span><strong id="coverage">—</strong><small id="count">Loading sampled cells…</small></div>
+      <div><span class="metric-label">Farthest passing sample</span><strong id="reach">—</strong><small>Horizontal distance from the base axis</small></div>
+      <div><span class="metric-label">Height range in this view</span><strong id="span">—</strong><small>Relative to the mounting plane</small></div>
+    </div>
+    <div class="stage-card">
+      <div class="stage-toolbar">
+        <div class="view-buttons seg seg-small" aria-label="Camera view"><button data-view="three" class="seg-btn active">3D</button><button data-view="side" class="seg-btn">Side</button><button data-view="top" class="seg-btn">Top</button></div>
+        <div class="view-options"><label><input type="checkbox" id="surface" checked> Surface</label><label><input type="checkbox" id="ghost" checked> <span id="ghost-label">Unloaded outline</span></label><button id="reset-camera" title="Reset camera and zoom" aria-label="Reset camera and zoom">↺</button></div>
+      </div>
+      <div class="scene" id="scene" tabindex="0" role="application" aria-label="Interactive arm workspace. Drag to rotate, scroll to zoom, click a point to inspect. Arrow keys rotate the view.">
+        <canvas id="cloud" aria-hidden="true"></canvas><canvas id="overlay" aria-hidden="true"></canvas>
+        <div class="scene-design-note" id="scene-design-note" hidden></div><div class="scene-label"><span class="status-dot" id="load-dot"></span><strong id="scene-load">1.00 kg</strong><span id="scene-direction">Best found gripper direction</span></div>
+        <div class="scene-empty" id="empty" hidden>No sampled poses meet these filters.<small>Try a different height or a lower payload.</small></div>
+        <div class="scene-bottom"><span>Drag to orbit · Scroll to zoom · Click a point</span><span id="render-note">Sampled workspace surface</span></div>
+      </div>
+      <div class="scene-caption"><span><i class="legend-dot" id="active-color"></i> A sampled posture supports this payload</span><span><i class="legend-dot ghost-dot"></i> <span id="ghost-caption">Unloaded reach</span></span><span><i class="legend-line"></i> Selected arm posture (schematic)</span></div>
+    </div>
+    <section class="comparison" aria-label="Compare payload layers">
+      <div class="section-heading"><h2>Compare the payload layers</h2><span>Click a card to explore it</span></div>
+      <div class="layer-cards" id="layers"></div>
+      <p class="comparison-note" id="comparison-note">These side envelopes show the best sampled capacity across azimuths. Gray is unloaded reach; color meets the card’s payload. Height filters apply to all four cards.</p>
+    </section>
+  </section>
+  <aside class="map-only map-report" aria-label="Selected arm pose">
+    <section class="inspector-card">
+      <div class="section-heading"><h2>Selected pose</h2><span class="small-tag" id="pose-capacity">—</span></div>
+      <div class="pose-status" id="pose-status">Select a point to inspect its posture.</div>
+      <div class="coordinates" id="coordinates"></div>
+      <div class="section-heading torque-heading"><h3>Joint torque at this load</h3><span>of 13 N·m</span></div>
+      <div id="torques"></div>
+      <details class="angles"><summary>Show joint angles</summary><div id="angles"></div></details>
+      <p class="microcopy"><span id="cell-description">Each point uses the best posture found in its 2.5 cm cell.</span> Other postures there may support less weight.</p>
+    </section>
+  </aside>
+</main>
+  </div>
+</section>
+
+<section class="section alt reference-area" aria-label="Calculation and model details">
+  <div class="container">
+<details class="reference-section" id="calculation-panel"><summary><span class="eyebrow">How it works</span><span class="reference-title">How the payload is calculated</span><small>Equations, worked examples and model assumptions</small></summary>
+__METHOD_HTML__
+<a class="reference-back" href="#explorer">↑ Back to the arm</a>
+</details>
+<details class="reference-section" id="assumptions-panel"><summary><span class="eyebrow">Model boundaries</span><span class="reference-title">Data &amp; assumptions</span><small>What the map means, downloads and references</small></summary>
+<div class="assumptions" id="assumptions">
+  <div class="footer-lead"><strong>Static holding capacity, not a hardware lift rating.</strong> Motion, grip friction, and printed-part strength still need validation.</div>
+  <details><summary>Model assumptions and map resolution</summary><p id="sample-info"></p><p>The fixed base is vertical and the object’s center of mass is at the between-jaw TCP. The existing gripper geometry is held open. The self-collision screen uses approximate spheres with a 5 mm sphere buffer. External obstacles, floor/table, and object shape are excluded; negative heights need an elevated mount.</p><p>Each point is a sampled posture, not a guaranteed optimum at every point in the surrounding cell. Missing samples do not prove a region is impossible. A pose existing does not establish a collision-free path to it. The arm drawing shows joint locations and a schematic gripper, not the collision geometry. Very large gravity-only capacities near vertical alignment do not establish structural or bearing capacity.</p></details>
+  <p id="design-assumptions" hidden>The length preview uses 262,144 sampled joint poses and 5 cm cells. Rod mass scales from 8 g per 150 mm; distal fittings and the rod centers move with the new length. Shorter rods may not fit the existing fittings. No collision screening, object geometry, stiffness, strength, dynamic loads, cable routing, or whole-cube orientation guarantee is included. The cube is a scale reference: its near face is 10 cm from the base axis, and its center height matches joint 1. The gripped object’s center of mass is assumed to coincide with the TCP.</p>
+  <div class="file-links"><a href="payload_workspace.png">Printable chart ↗</a><a href="any_orientation.csv">Best-direction samples · CSV ↗</a><a href="downward_15deg.csv">Downward-grasp samples · CSV ↗</a></div>
+</div>
+</details>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="container narrow center">
+    <p class="muted small">ArthroBot arm · offline static payload study. Page style follows the <a href="https://davidhnguyen2000.github.io/draft-site/" target="_blank" rel="noopener noreferrer">Draft</a> project page; Draft’s robot generator and actuator fits are not used. Calculations and data are specific to this arm.</p>
+  </div>
+</footer>
+
+<dialog id="geometry-dialog" class="geometry-dialog" aria-labelledby="geometry-title">
+  <div class="dialog-heading"><div><h2 id="geometry-title">Rod lengths</h2><p>Changes apply to both the arm and reach map.</p></div><button type="button" id="close-geometry" aria-label="Close rod lengths">×</button></div>
+  <section class="design-card" id="design" aria-label="Rod length design controls">
+    <div class="design-heading"><div><p>Preview different rod lengths using the same motors.</p></div>
+      <div class="dataset-tabs seg"><button id="original-map" class="seg-btn active" aria-pressed="true">Original · 150 + 150 mm</button><button id="design-map" class="seg-btn" aria-pressed="false">Adjust rod lengths</button></div>
+    </div>
+    <div id="design-controls" hidden>
+      <div class="rod-fields">
+        <div><div class="rod-label"><label for="upper-length"><i class="rod-swatch upper"></i> Upper rod</label><div><input id="upper-number" type="number" min="50" max="750" step="25" value="150" aria-label="Upper rod length in millimeters"><span>mm</span></div></div><input id="upper-length" type="range" min="50" max="750" step="25" value="150" aria-label="Upper rod length"><div class="range-ends"><span>50 mm</span><span>750 mm</span></div></div>
+        <div><div class="rod-label"><label for="forearm-length"><i class="rod-swatch forearm"></i> Forearm rod</label><div><input id="forearm-number" type="number" min="50" max="750" step="25" value="150" aria-label="Forearm rod length in millimeters"><span>mm</span></div></div><input id="forearm-length" type="range" min="50" max="750" step="25" value="150" aria-label="Forearm rod length"><div class="range-ends"><span>50 mm</span><span>750 mm</span></div></div>
+        <div class="design-actions"><label><input id="equal-rods" type="checkbox" checked> Change both together</label><div class="rod-presets"><button data-length="100">100</button><button data-length="150">150</button><button data-length="250">250</button><button data-length="500">500</button><button data-length="650">650</button></div><button id="animate-length" aria-pressed="false">▶ Animate lengths</button></div>
+      </div>
+      <div class="design-options"><label class="map-settings-only"><input id="cube" type="checkbox" checked> Show 1 m cube beside base</label><label class="map-settings-only"><input id="same-scale" type="checkbox" checked> Keep the same camera scale</label><span id="design-status" role="status" aria-live="polite">Ready</span></div>
+      <p class="design-caveat">Changing lengths updates the arm’s reach, mass and static payload limit. This preview does not check collisions or part strength.</p>
+    </div>
+  </section>
+
+  <div class="dialog-footer"><a class="redesign-link" href="redesign_options.html">Compare alternative designs ↗</a><button type="button" id="done-geometry">Done</button></div>
+</dialog>
+<script id="rod-worker" type="text/plain">__WORKER__</script>
+<script>const PACKED=__DATA__;const META=__META__;</script>
+<script>__JS__</script>
+<script>__DESIGN_JS__</script>
+<script>__METHOD_JS__</script>
+<script>__POSE_SOLVER_JS__</script>
+<script>__ARM_JS__</script>
+<script>__SHELL_JS__</script>
+</body></html>

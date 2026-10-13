@@ -1,0 +1,101 @@
+<section class="method-section" id="calculation" aria-labelledby="method-heading">
+  <div class="method-heading-row">
+    <div>
+      <p class="method-eyebrow">The calculation</p>
+      <h2 id="method-heading">Reach is geometry. Lifting is a torque budget.</h2>
+    </div>
+    <p class="method-intro">For each arm posture, we calculate what gravity asks of all six joints, then find the payload that fits inside every motor limit.</p>
+  </div>
+
+  <div class="method-steps">
+    <article class="method-step">
+      <span class="method-step-number" aria-hidden="true">01</span>
+      <h3>Find each weight’s lever arm</h3>
+      <div class="method-equation" role="math" aria-label="Joint torque equals the joint axis dotted with the sum of each downstream center of mass offset crossed with its gravitational force.">τ<sub>j</sub> = u<sub>j</sub> · Σ [(c<sub>i</sub> − p<sub>j</sub>) × m<sub>i</sub>g]</div>
+      <p><strong>p</strong> is the joint pivot, <strong>u</strong> its rotation axis, and <strong>c</strong> a downstream part’s center of mass. Gravity is <strong>g = [0, 0, −9.81] m/s²</strong>. The cross product gives the turning effect; the dot product keeps the part acting around that motor’s axis.</p>
+      <p class="method-reason">Why it matters: distance from the base alone is not a joint’s lever arm. Changing the posture or gripper orientation changes the torque.</p>
+    </article>
+    <article class="method-step">
+      <span class="method-step-number" aria-hidden="true">02</span>
+      <h3>Include the arm before the payload</h3>
+      <div class="method-equation" role="math" aria-label="At a fixed pose, gravity torque at joint j equals its own-arm torque plus payload mass times its torque per kilogram.">τ<sub>j</sub>(m) = a<sub>j</sub> + m k<sub>j</sub></div>
+      <p><strong>a</strong> is the torque from the arm, motors and gripper. <strong>k</strong> is the torque added by 1 kg at the grasp point, in N·m/kg. Payload mass <strong>m</strong> is the only value changing in this equation; the posture stays fixed.</p>
+      <p class="method-reason">Why it matters: the motor already spends some of its capacity holding the arm itself. Our model includes <strong id="method-moving-mass">3.297 kg</strong> of moving arm mass; the fixed base does not load the moving joints.</p>
+    </article>
+    <article class="method-step">
+      <span class="method-step-number" aria-hidden="true">03</span>
+      <h3>Respect every motor’s limit</h3>
+      <div class="method-equation" role="math" aria-label="For every joint, the absolute value of own-arm torque plus payload mass times torque per kilogram must not exceed its motor torque cap, with payload mass nonnegative.">|a<sub>j</sub> + m k<sub>j</sub>| ≤ T<sub>j</sub>, &nbsp; m ≥ 0</div>
+      <p>We solve each joint’s allowed mass interval and intersect all six intervals. The upper end of the intersection is the <strong>static payload ceiling for that posture</strong>. Here, each motor cap is <strong>13 N·m</strong>.</p>
+      <p class="method-reason">Why keep the signs: the arm and payload can turn a joint in opposite directions. Subtracting their absolute torques would give the wrong answer in those postures.</p>
+    </article>
+  </div>
+
+  <div class="method-worked" aria-labelledby="method-example-heading">
+    <div class="method-worked-controls">
+      <p class="method-eyebrow">Try the numbers</p>
+      <h3 id="method-example-heading">One posture, six motor checks</h3>
+      <p class="method-fixed-note">These verified examples use the original <strong>150 + 150 mm rods</strong>, a vertical base axis, and a payload balanced at the grasp point. They stay fixed when you change the workspace preview above.</p>
+      <label class="method-field" for="method-pose">Arm posture
+        <select id="method-pose">
+          <option value="zero">Original zero joint angles</option>
+          <option value="extended">Demanding extended posture found</option>
+        </select>
+      </label>
+      <p id="method-pose-description" class="method-pose-description">All six joint angles are zero. This is one posture, not a reach or payload rating for the whole arm.</p>
+      <div class="method-payload-heading"><label for="method-payload">Payload at the grasp</label><output id="method-payload-value" for="method-payload">2.00 kg</output></div>
+      <input id="method-payload" class="method-slider" type="range" min="0" max="2" step="0.01" value="2" aria-describedby="method-load-note">
+      <div class="method-load-presets" role="group" aria-label="Example payload presets">
+        <button type="button" data-method-load="0" aria-pressed="false">0 kg</button>
+        <button type="button" data-method-load="0.5" aria-pressed="false">0.5 kg</button>
+        <button type="button" data-method-load="1" aria-pressed="false">1 kg</button>
+        <button type="button" data-method-load="2" aria-pressed="true">2 kg</button>
+      </div>
+      <p id="method-load-note" class="method-small">This slider changes only the worked example. Torque signs describe gravity’s direction; the motor supplies the opposite holding torque.</p>
+      <dl class="method-example-summary">
+        <div><dt>This posture’s static ceiling</dt><dd id="method-capacity">—</dd></div>
+        <div><dt>Joint that sets the ceiling</dt><dd id="method-limiting">—</dd></div>
+      </dl>
+      <p id="method-load-status" class="method-status" role="status" aria-live="polite">Loading verified calculation…</p>
+    </div>
+    <div class="method-worked-results">
+      <div class="method-table-heading"><h4>Gravity torque at this payload</h4><span>All values in N·m</span></div>
+      <div class="method-table-scroll" tabindex="0" role="region" aria-label="Six-joint gravity torque table; scroll horizontally on smaller screens">
+        <table class="method-table">
+          <caption class="method-sr-only">Signed arm and payload torque contributions, total gravity torque, motor cap, and remaining torque for each joint.</caption>
+          <thead><tr><th scope="col">Joint</th><th scope="col">Arm</th><th scope="col">Payload</th><th scope="col">Total</th><th scope="col">Cap</th><th scope="col">Remaining</th></tr></thead>
+          <tbody id="method-joint-rows"></tbody>
+        </table>
+      </div>
+      <p class="method-small">Remaining = cap − |total|. A negative value means this posture exceeds that motor’s static torque limit. The bars show |total| ÷ cap.</p>
+      <div class="method-substitution">
+        <h4 id="method-substitution-title">How the limiting joint sets the ceiling</h4>
+        <p id="method-substitution-equation" class="method-number-equation">—</p>
+        <p id="method-substitution-explanation">—</p>
+      </div>
+      <details class="method-pose-details"><summary>Show the exact posture</summary><p id="method-joint-angles"></p><p id="method-tcp-location"></p></details>
+    </div>
+  </div>
+
+  <div class="method-reading-grid">
+    <article class="method-reading-card">
+      <h3>What a colored point means</h3>
+      <p>The original map groups sampled grasp positions into <strong>2.5 cm cells</strong> and keeps the best payload posture found in each cell. A 2 kg point means <strong>at least one sampled posture</strong> in that cell can hold 2 kg in the static motor model.</p>
+      <p>“Any orientation” allows the sampler to choose a favorable gripper orientation. It does <strong>not</strong> mean every required module orientation works there. The downward mode checks only its stated approach-angle cone. Neither mode proves a continuous collision-free path.</p>
+    </article>
+    <article class="method-reading-card">
+      <h3>What changing a rod changes</h3>
+      <p>The preview recalculates joint positions, arm centers of mass, and gravity torque. It assumes the same tube material and cross section, with <strong>8 g per 150 mm</strong>. It uses 262,144 poses and 5 cm cells, so it is a coarser comparison than the original map.</p>
+      <p>Geometric reach comes from the joint chain; payload filters the postures that can hold a load. For the current 150 + 150 mm rods, the joint-1-to-grasp chain sums to <strong id="method-reach-bound">0.722 m</strong>. That is an upper distance bound, not an attainable spherical workspace. An empty sampled cell is not proof of unreachable space.</p>
+      <div class="method-equation" role="math" aria-label="The distance from joint one to the grasp cannot exceed the sum of the joint offsets and tool offset.">d<sub>grasp</sub> ≤ Σ ‖joint offset‖ + ‖tool offset‖</div>
+      <p><strong>Why a lighter load cannot unlock the whole 1 m cube:</strong> reaching all corners of any 1 m cube requires a distance of at least √3 / 2 ≈ 0.866 m from a fixed pivot, even if it were placed at the cube’s center. The original arm’s 0.722 m bound is smaller. Mounting beside the cube requires still more reach.</p>
+    </article>
+    <article class="method-reading-card">
+      <h3>What “static” leaves out</h3>
+      <div class="method-equation method-dynamics" role="math" aria-label="Motor torque equals mass matrix times joint acceleration plus Coriolis and centrifugal terms plus gravity.">τ<sub>motor</sub> = M(q)q̈ + C(q, q̇)q̇ + g(q)</div>
+      <p>This rigid-body equation includes acceleration and velocity effects. At rest, <strong>g(q) is the motor’s gravity-compensation torque</strong>: the opposite sign to the external gravity moments in the table. Friction and contact forces require additional terms.</p>
+      <p>Grip slip, printed-part strength, flex, thermal duty and the 50 cm module’s clearance are not validated here. The original map uses an approximate self-collision screen; changed-length previews do not. <a href="#assumptions">Review the model assumptions.</a></p>
+    </article>
+  </div>
+  <p class="method-source-note">Calculation references: <a href="https://modernrobotics.northwestern.edu/nu-gm-book-resource/5-2-statics-of-open-chains/" target="_blank" rel="noopener noreferrer">Modern Robotics · joint torques from applied forces</a> and <a href="https://modernrobotics.northwestern.edu/chapters/chapter8/" target="_blank" rel="noopener noreferrer">rigid-body dynamics</a>. The worked numbers come from this arm’s verified model snapshots; these references describe the underlying mechanics.</p>
+</section>

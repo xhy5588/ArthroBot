@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ARM REBOT · Design comparison</title>
+  <style>__REDESIGN_CSS__</style>
+</head>
+<body>
+  <header class="page-header">
+    <div><div class="eyebrow"><span class="brand-mark">↗</span> ARM REBOT <span>/</span> DESIGN EXPLORER</div>
+      <h1>Compare ways to reach the build volume.</h1>
+      <p>Compare three arm concepts with one stationary base beside the cube, carrying a 2 kg module.</p>
+    </div>
+    <a class="back-link" href="payload_workspace.html#design">← Rod-length explorer</a>
+  </header>
+  <main>
+    <section class="mounting-banner"><div><strong>Mounting height is unconfirmed.</strong><p>This comparison places the shoulder at the cube’s middle height, 10 cm outside its near face. That assumption is essential to the 750 + 750 mm result.</p></div><div id="mounting-scenarios"></div></section>
+    <section class="concept-picker" aria-label="Design concepts" id="concept-picker"></section>
+    <section class="concept-intro"><div><span class="eyebrow" id="concept-kicker">DESIGN CONCEPT</span><h2 id="concept-title"></h2><p id="concept-description"></p></div><div class="verdict" id="concept-verdict"></div></section>
+    <div class="workspace">
+      <div class="visual-column">
+        <div class="metrics">
+          <div><span>Pose samples reached</span><strong id="geometry-result">—</strong><small id="geometry-note"></small></div>
+          <div><span>Samples within torque limit</span><strong id="torque-result">—</strong><small id="torque-note"></small></div>
+          <div><span>Whole-volume geometry</span><strong id="analytic-result">—</strong><small id="analytic-note">Necessary bounds and coverage are separate checks.</small></div>
+        </div>
+        <section class="stage-card">
+          <div class="stage-toolbar"><div class="view-buttons" aria-label="Camera angle"><button type="button" class="active" data-view="perspective">3D</button><button type="button" data-view="front">Side</button><button type="button" data-view="top">Top</button></div><div class="view-options"><label><input id="show-samples" type="checkbox" checked> Test points</label><label><input id="show-module" type="checkbox" checked> 50 cm module</label><button id="reset-view" type="button" aria-label="Reset view">↺</button></div></div>
+          <div class="scene" id="scene" tabindex="0" role="group" aria-label="Interactive design schematic. Drag to orbit, scroll to zoom, or use arrow keys to rotate."><canvas id="scene-canvas" aria-label="Robot design and one metre target cube"></canvas><div class="scene-label"><strong id="scene-title"></strong><span>Fixed scale · metres</span></div><div class="scene-status" id="scene-status"></div><div class="scene-bottom"><span>Drag to orbit · scroll to zoom · click a test point</span><span>Schematic geometry</span></div></div>
+          <div class="scene-caption"><span><i class="legend cube"></i> 1 m target cube</span><span><i class="legend good"></i> Reach + static torque</span><span><i class="legend amber"></i> Reach only</span><span><i class="legend bad"></i> No demonstrated reach</span><span><i class="legend line"></i> Selected arm pose</span></div>
+        </section>
+        <div class="animation-bar"><button id="play" type="button" aria-pressed="false">▶ Play tested poses</button><input id="case-slider" type="range" min="0" max="0" value="0" aria-label="Test pose index"><output id="case-count">0 / 0</output></div>
+        <p class="animation-note">Animation steps through independently tested poses. Connecting motions, collision-free paths and motor dynamics have not been validated.</p>
+      </div>
+      <aside>
+        <section class="control-card"><div class="section-heading"><h2>Inspect a target</h2><span class="small-tag">2 kg payload</span></div><p class="microcopy">Positions refer to the middle grasp point. The 50 cm line shows the module’s length only.</p><div id="target-controls"></div><label class="field-label" for="orientation">Required orientation</label><select id="orientation"></select><div class="pose-status" id="pose-status" aria-live="polite"></div><div class="coordinates" id="coordinates"></div><p class="microcopy" id="pose-error"></p></section>
+        <section class="inspector-card"><div class="section-heading"><h2 id="load-heading">Static holding load</h2><span class="small-tag" id="load-tag">Output caps</span></div><div id="load-values"></div><p class="microcopy" id="load-note"></p><details id="joint-angles"><summary>Joint angles</summary><div id="angle-values"></div></details></section>
+      </aside>
+    </div>
+    <section class="design-details"><article class="detail-card"><span class="eyebrow">WHAT CHANGES</span><h2>Mechanical arrangement</h2><ul id="changes"></ul><div class="dimension-table" id="dimensions"></div><h3 class="budget-heading">Mass and packaging assumptions</h3><ul id="mass-model"></ul></article><article class="detail-card"><span class="eyebrow">IDEAL-MODEL CHECKS</span><h2>Validation and its limits</h2><p id="analytic-claim"></p><p id="validation-method" class="validation-method"></p><ul id="limitations"></ul></article></section>
+    <section class="assumptions-card"><h2>Common assumptions</h2><div id="assumptions"></div><p class="scope-note">These are engineering concepts checked against a mathematical model. A passing result does not certify a manufactured mechanism, gripper, printed parts, bearings or support frame.</p></section>
+  </main>
+  <footer><div><strong>Keep the base fixed; separate position and orientation</strong><p>Base yaw, shoulder pitch and elbow pitch position the wrist. Three intersecting wrist axes set the module orientation. A compact wrist helps orientation coverage, but the arm still needs enough span to reach the far corner. Extra shoulder and elbow reduction is a proposed transmission budget, not selected or installed hardware.</p><p>At the far horizontal corner, the 2 kg payload alone contributes about 23.7 N·m about a conventional radial shoulder-pitch axis, before arm weight. Dividing the reach among shorter links does not remove this load moment. The ideal equal pivot spans must be at least 737 mm with the shoulder at mid-height, or 852 mm with the shoulder 50 mm above the cube bottom. The 750 + 750 mm candidate has only about 25 mm of combined outer-reach margin in the mid-height model; these are not final tube cut lengths.</p></div><div class="file-links"><a href="payload_workspace.html#design">Current-arm workspace</a><a href="redesign_validation.json">Calculation report (JSON)</a></div><div id="sources" class="sources"></div></footer>
+  <script id="redesign-data" type="application/json">__REDESIGN_DATA__</script>
+  <script>__REDESIGN_JS__</script>
+</body>
+</html>

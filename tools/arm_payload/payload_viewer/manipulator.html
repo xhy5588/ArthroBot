@@ -1,0 +1,94 @@
+<section class="arm-editor" id="arm-editor" aria-label="Interactive arm and payload inspector">
+  <div class="builder arm-workbench">
+    <aside class="b-controls arm-controls" aria-label="Arm controls">
+      <div class="b-slider arm-load-control">
+        <div class="b-slider-head arm-load-heading"><label for="arm-load">Test payload</label><b><output id="arm-load-value" for="arm-load">1.00</output> kg</b></div>
+        <input type="range" id="arm-load" min="0" max="2" step="0.01" value="1" aria-label="Test payload in kilograms">
+        <div class="b-slider-ends arm-range-labels"><span>0 kg</span><span>2 kg</span></div>
+      </div>
+
+      <div class="b-group">
+        <span class="b-group-label" id="arm-tool-label">Drag the gripper to</span>
+        <div class="seg seg-small arm-tool-mode" id="arm-tool-mode" role="toolbar" aria-labelledby="arm-tool-label">
+          <button type="button" class="seg-btn active" data-arm-tool="move" aria-pressed="true">Move</button>
+          <button type="button" class="seg-btn" data-arm-tool="rotate" aria-pressed="false">Rotate</button>
+        </div>
+      </div>
+
+      <div class="b-group">
+        <span class="b-group-label" id="arm-view-label">Camera</span>
+        <div class="arm-camera-tools">
+          <div class="seg seg-small arm-view-buttons" role="group" aria-labelledby="arm-view-label">
+            <button type="button" class="seg-btn active" data-arm-view="three" aria-pressed="true">3D</button>
+            <button type="button" class="seg-btn" data-arm-view="side" aria-pressed="false">Side</button>
+            <button type="button" class="seg-btn" data-arm-view="top" aria-pressed="false">Top</button>
+          </div>
+        </div>
+      </div>
+
+      <details class="arm-detail">
+        <summary>Individual joints</summary>
+        <div class="arm-detail-body"><div class="arm-joints" id="arm-joints"></div><button type="button" id="arm-adopt" class="b-reset arm-secondary-action">Use selected map pose</button></div>
+      </details>
+      <details class="arm-detail arm-view-options">
+        <summary>View options</summary>
+        <div class="arm-detail-body">
+          <label><input type="checkbox" id="arm-show-frame"> Tool frame</label>
+          <label><input type="checkbox" id="arm-show-module"> 50 cm module</label>
+          <p class="b-note">Tool X is the approach axis; rotation rings follow the local tool frame.</p>
+        </div>
+      </details>
+
+      <button type="button" id="arm-zero" class="b-reset arm-reset-pose">↺ Reset pose</button>
+      <p class="muted small b-note">Joint positions and torques come from this arm’s URDF; everything is computed in the page, offline.</p>
+    </aside>
+
+    <div class="b-mid arm-visual-column">
+      <div class="b-view arm-stage" id="arm-stage" tabindex="0" role="group" aria-label="Robot arm. Drag arrows to move the gripper, rings to rotate, or joints to turn individual motors. Drag empty background to orbit; scroll to zoom.">
+        <canvas id="arm-canvas" width="1000" height="620" aria-label="Robot arm with draggable gripper handles"></canvas>
+        <div class="b-overlay">
+          <span class="b-overlay-label">Static payload limit</span>
+          <span class="b-mass"><b id="arm-capacity">—</b></span>
+          <span class="b-limiting arm-limiting-line">Limiting joint <b id="arm-limiting">—</b></span>
+          <span class="b-model arm-stage-label" id="arm-model-label">Current arm geometry</span>
+        </div>
+        <div class="b-sim-bar arm-stage-bottom"><p class="b-sim-note" id="arm-tool-hint">Drag an arrow to move the gripper.</p><span class="b-sim-note b-orbit">Drag background to orbit · scroll to zoom</span></div>
+      </div>
+    </div>
+
+    <aside class="b-report arm-sidebar" aria-label="Payload and pose report">
+      <section>
+        <h4>Status</h4>
+        <div class="arm-status" id="arm-status" role="status" aria-live="polite">Preparing the arm…</div>
+        <button type="button" id="arm-reset" class="b-reset arm-secondary-action arm-return-target" hidden>Return target to arm</button>
+      </section>
+      <section>
+        <h4>Motor torques <span class="h4-note arm-torque-key">required / available · N·m</span></h4>
+        <div class="arm-torques" id="arm-torques"></div>
+      </section>
+      <section class="arm-inspector-details">
+        <details class="arm-detail">
+          <summary>Position &amp; orientation</summary>
+          <div class="arm-detail-body">
+            <fieldset class="arm-fields"><legend>Gripper target <span>metres</span></legend><div class="arm-three-fields">
+              <label for="arm-target-x"><span class="arm-axis-x">X</span><input id="arm-target-x" type="number" step="0.01" value="0" inputmode="decimal" aria-label="Target X in metres"></label>
+              <label for="arm-target-y"><span class="arm-axis-y">Y</span><input id="arm-target-y" type="number" step="0.01" value="0" inputmode="decimal" aria-label="Target Y in metres"></label>
+              <label for="arm-target-z"><span class="arm-axis-z">Z</span><input id="arm-target-z" type="number" step="0.01" value="0" inputmode="decimal" aria-label="Target Z in metres"></label>
+            </div></fieldset>
+            <fieldset class="arm-fields"><legend>Tool orientation <span>degrees</span></legend><div class="arm-three-fields">
+              <label for="arm-roll"><span>Roll</span><input id="arm-roll" type="number" step="5" value="0" inputmode="decimal" aria-label="Tool roll in degrees" title="World-frame roll: R = Rz(yaw) Ry(pitch) Rx(roll)."></label>
+              <label for="arm-pitch"><span>Pitch</span><input id="arm-pitch" type="number" step="5" value="0" inputmode="decimal" aria-label="Tool pitch in degrees" title="World-frame pitch: R = Rz(yaw) Ry(pitch) Rx(roll)."></label>
+              <label for="arm-yaw"><span>Yaw</span><input id="arm-yaw" type="number" step="5" value="0" inputmode="decimal" aria-label="Tool yaw in degrees" title="World-frame yaw: R = Rz(yaw) Ry(pitch) Rx(roll)."></label>
+            </div></fieldset>
+            <p class="arm-detail-note">World coordinates; angles use Rz(yaw) Ry(pitch) Rx(roll).</p>
+          </div>
+        </details>
+        <details class="arm-detail">
+          <summary>Target accuracy</summary>
+          <div class="arm-detail-body"><dl class="kv arm-diagnostics"><dt>Position error</dt><dd id="arm-position-error">—</dd><dt>Orientation error</dt><dd id="arm-orientation-error">—</dd></dl><p class="arm-detail-note" id="arm-target-note">The limit applies to the reached arm posture.</p></div>
+        </details>
+      </section>
+      <p class="arm-model-note">Static motor estimate. Collisions and physical strength are unchecked. <a href="#calculation">How it’s calculated ↗</a></p>
+    </aside>
+  </div>
+</section>
