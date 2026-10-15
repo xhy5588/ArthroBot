@@ -45,6 +45,7 @@ sides, not yet exactly in the standing pose
 | Arm | 6 modules + DM4310 rack-and-pinion gripper; validated model; TCP reach policy | [docs/arm.md](docs/arm.md) |
 | Arm motion | gripper pose IK; collision-free planning with cuRobo; loose printed-arm test model | [docs/arm_planning.md](docs/arm_planning.md) |
 | Arm payload | static payload limit at any posture; reach map by payload; rod-length and redesign studies | [docs/arm_payload.md](docs/arm_payload.md) |
+| Teleoperation | PICO headset drives the simulated arm through XRoboToolkit; v1 and v2 arm designs; timed pick-and-place tasks | [below](#headset-teleoperation-simulation) |
 | Humanoid | 20 modules, two arms, two wheel legs; standing, get-up from lying, hand-over | [docs/humanoid.md](docs/humanoid.md) |
 | Next | describe new morphologies from a module library; later, an arm that assembles modules into a humanoid for different tasks | — |
 
@@ -81,6 +82,30 @@ To build it yourself from this checkout:
 python tools/arm_payload/build_payload_viewer.py
 xdg-open tools/arm_payload/workspace_payload/payload_workspace.html
 ```
+
+## Headset teleoperation (simulation)
+
+<img src="docs/media/teleop_demo.gif" width="100%" alt="Seen through the headset: the monitor shows the simulated arm in MuJoCo following the operator's controller as it reaches and turns">
+
+*Through the headset: the PICO controller drives the simulated arm on the monitor.*
+[Full recording (52 s)](docs/media/teleop_demo.mp4)
+
+A PICO 4 Ultra headset now drives the arm in simulation through
+[XRoboToolkit](https://github.com/XR-Robotics). Hold the controller's grip and the
+gripper follows the hand; the trigger closes the jaws. The arm's own inverse kinematics
+keeps the grasp point on the target and turns the gripper as near the hand's rotation as
+the arm allows, and targets stay inside the arm's measured reach.
+
+- **Two arm designs:** v1, the arm in this repository, and v2, a new small-module arm.
+- **Pick-and-place tasks of increasing difficulty:** a tennis ball, a 40 mm cube, a 25 mm
+  cube into a small tray, and a bottle that has to be set down standing. Every trial is
+  timed and logged (grasps, drops, joint travel), so arm designs, IK modes and operators
+  can be compared on the same task.
+- **A browser launcher** picks the headset or a simulated controller, the arm, the task
+  and the IK mode, and shows the MuJoCo view in the page.
+
+The teleop code is part of MetaMachine, the lab's robot framework, which is not public
+yet.
 
 ## Layout
 
@@ -180,6 +205,7 @@ message, because the part grouping must be reviewed in `build.py` first.
   that registers the ArthroBot tasks. Its license is in `scripts/rsl_rl/LICENSE`.
 - [RSL-RL](https://github.com/leggedrobotics/rsl_rl) for PPO.
 - NVIDIA [cuRobo](https://github.com/NVlabs/curobo) (Apache-2.0) for collision-free arm planning.
+- [XRoboToolkit](https://github.com/XR-Robotics) for streaming the PICO headset to the PC in teleoperation.
 - [HoST](https://arxiv.org/abs/2502.08378) (Huang et al., 2025), which the get-up task is adapted from.
 - Seeed Studio [reBot-DevArm](https://github.com/Seeed-Projects/reBot-DevArm), the
   reference for the DM4310 gripper transmission.
