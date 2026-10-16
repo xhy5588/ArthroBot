@@ -45,9 +45,10 @@ sides, not yet exactly in the standing pose
 | Arm | 6 modules + DM4310 rack-and-pinion gripper; validated model; TCP reach policy | [docs/arm.md](docs/arm.md) |
 | Arm motion | gripper pose IK; collision-free planning with cuRobo; loose printed-arm test model | [docs/arm_planning.md](docs/arm_planning.md) |
 | Arm payload | static payload limit at any posture; reach map by payload; rod-length and redesign studies | [docs/arm_payload.md](docs/arm_payload.md) |
-| Teleoperation | PICO headset drives the simulated arm through XRoboToolkit; v1 and v2 arm designs; timed pick-and-place tasks | [below](#headset-teleoperation-simulation) |
+| Teleoperation | PICO headset drives the simulated arm through XRoboToolkit; v1 and v2 arm designs; timed pick-and-place tasks, and assembling two modules with a rod; the real gripper board mirrored | [docs/teleop.md](docs/teleop.md) |
+| Module library | the MG5010E joint module, its square stick and the gripper from CAD in MetaMachine's module catalog, snapped together in its robot builder; the gripper as one motor with coupled rack jaws | [docs/teleop.md](docs/teleop.md#a-module-library-from-cad) |
 | Humanoid | 20 modules, two arms, two wheel legs; standing, get-up from lying, hand-over | [docs/humanoid.md](docs/humanoid.md) |
-| Next | describe new morphologies from a module library; later, an arm that assembles modules into a humanoid for different tasks | — |
+| Next | the real robots; teleoperation of robots assembled in the builder; later, an arm that assembles modules into a humanoid for different tasks | — |
 
 ## Results (simulation only)
 
@@ -58,8 +59,11 @@ sides, not yet exactly in the standing pose
 | Humanoid get-up | stands up from 99.4% of held-out lying poses with no assistance, in 1.6 s | `checkpoints/humanoid_getup/model_10000.pt` |
 | Hand-over (get-up → standing) | 99.4% stay up after switching to the standing policy | both humanoid checkpoints |
 | Arm planning around a table and a wall | cuRobo: no contacts, 0.02 mm at the target (44 of 48 targets; the rest are impossible). IK with joint interpolation: 86% of moves touch the wall or table, 169 mm off | no training |
+| Module assembly (scripted trial, v2 arm) | 6 of 9 random layouts assembled end to end; the rod seated in all 9 | no training |
+| Real gripper board model | 3.7 mrad RMS jaw angle and 0.030 N·m RMS torque over the board's ten logged moves | no training |
 
-Nothing has been run on the real robots yet.
+The real gripper's board has been driven and its moves logged to fit the simulated
+gripper; the arms have not run on the real robots yet.
 
 ## Arm payload calculator
 
@@ -97,13 +101,24 @@ keeps the grasp point on the target and turns the gripper as near the hand's rot
 the arm allows, and targets stay inside the arm's measured reach.
 
 - **Two arm designs:** v1, the arm in this repository, and v2, a new small-module arm.
-- **Pick-and-place tasks of increasing difficulty:** a tennis ball, a 40 mm cube, a 25 mm
-  cube into a small tray, and a bottle that has to be set down standing. Every trial is
-  timed and logged (grasps, drops, joint travel), so arm designs, IK modes and operators
-  can be compared on the same task.
-- **A browser launcher** picks the headset or a simulated controller, the arm, the task
-  and the IK mode, and shows the MuJoCo view in the page.
+- **Tasks of increasing difficulty:** a tennis ball, a 40 mm cube, a 25 mm cube into a
+  small tray, a bottle that has to be set down standing, and assembling two modules
+  with a rod. Every trial is timed and logged (grasps, drops, near misses, joint
+  travel), so arm designs, IK modes and operators can be compared on the same task.
+- **A Teleop app** in MetaMachine's browser dashboard picks the headset or a simulated
+  controller, the arm, the task and the IK mode, and shows the MuJoCo view in the page.
+- **The real gripper mirrored:** the gripper board's moves were logged and the
+  simulated gripper fitted to them, so v2 teleop runs the board's own speed presets
+  and stops.
 
+<img src="docs/media/module_assembly_demo.gif" width="100%" alt="The v2 arm picks up a standing square rod, turns it sideways, pushes it into the clamped module's socket, then picks up the loose module and pushes its socket onto the rod's free end">
+
+*Module assembly, the scripted trial at twice real time: the arm picks up a standing
+rod, pushes it into the clamped module's socket, then pushes the loose module onto the
+rod's free end. The two modules and the rod are the real parts, converted from CAD into
+MetaMachine's module library.*
+
+Details, the module library and the gripper fit: [docs/teleop.md](docs/teleop.md).
 The teleop code is part of MetaMachine, the lab's robot framework, which is not public
 yet.
 
@@ -126,7 +141,7 @@ scripts/                  entry points: arm/, humanoid/, rsl_rl/ (official Isaac
 checkpoints/              the three trained policies above
 tools/arm_payload/        arm payload calculator: offline page, its builders and the saved reach map
 tests/                    model and policy-logic tests (no simulator needed)
-docs/                     arm.md, arm_planning.md, arm_payload.md, humanoid.md, history/ (earlier experiments)
+docs/                     arm.md, arm_planning.md, arm_payload.md, teleop.md, humanoid.md, history/ (earlier experiments)
 build/, logs/             generated models and training runs (git-ignored)
 ```
 
